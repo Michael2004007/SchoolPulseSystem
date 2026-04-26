@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
 from flask_login import login_required
 from DAO.repartoDAO import RepartoDAO
 from DAO.alumnoDAO import AlumnoDAO
@@ -24,10 +24,28 @@ def normalizar_curso(curso):
 @login_required
 def index():
     repartos = RepartoDAO.seleccionar_agrupado()
-    total_alumnos = len(repartos) if repartos else 0
-    total_pulseras = sum(len(r.pulseras) for r in repartos) if repartos else 0
+    todos_alumnos = AlumnoDAO.seleccionar()
+
+    alumno_ids_con_reparto = {r.alumno_id for r in repartos}
+
+    for alumno in todos_alumnos:
+        if alumno.id not in alumno_ids_con_reparto:
+            r = Reparto()
+            r.alumno_id = alumno.id
+            r.nombre = alumno.nombre
+            r.apellido = alumno.apellido
+            r.curso = alumno.curso
+            r.pulseras = []
+            r.fecha_reparto = None
+            repartos.append(r)
+
+    repartos.sort(key=lambda r: (r.apellido, r.nombre))
+
+    total_alumnos = len(todos_alumnos)
+    total_pulseras = sum(len(r.pulseras) for r in repartos)
     pulseras_todas = PulseraDAO.seleccionar()
     disponibles = len([p for p in pulseras_todas if p.estado == 'disponible']) if pulseras_todas else 0
+
     return render_template('reparto/index.html',
                            repartos=repartos,
                            total_alumnos=total_alumnos,
@@ -188,7 +206,7 @@ def cargar_excel():
         except Exception as e:
             flash(f'❌ Error al procesar el archivo: {e}', 'danger')
 
-        return redirect(url_for('reparto.cargar_excel'))
+        return redirect(url_for('reparto.index'))
 
     alumnos = AlumnoDAO.seleccionar()
     return render_template('reparto/cargar_excel.html', alumnos=alumnos)
@@ -205,6 +223,8 @@ def eliminar(alumno_id):
     else:
         flash('❌ Ocurrió un error al eliminar la asignación.', 'danger')
     return redirect(url_for('reparto.index'))
+
+
 @reparto_bp.route('/descargar_modelo')
 @login_required
 def descargar_modelo():
@@ -219,7 +239,6 @@ def descargar_modelo():
     wb.save(output)
     output.seek(0)
 
-    from flask import send_file
     return send_file(
         output,
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

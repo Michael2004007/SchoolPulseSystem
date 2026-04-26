@@ -59,13 +59,36 @@
         </div>
     </div>
 
+    {% if repartos %}
+    <!-- BUSCADOR -->
+    <div style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem;">
+        <div style="position: relative; flex: 1;">
+            <i class="bi bi-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+            <input type="text" id="filtro-nombre" placeholder="Buscar por nombre o apellido..."
+                   style="width: 100%; padding: 0.45rem 0.75rem 0.45rem 2rem;
+                          border: 1px solid var(--border); border-radius: 8px;
+                          background: var(--bg-page); color: var(--text-primary);
+                          font-size: 0.8rem; box-sizing: border-box;">
+        </div>
+        <div style="position: relative;">
+            <i class="bi bi-mortarboard" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+            <input type="text" id="filtro-curso" placeholder="Curso..."
+                   style="width: 110px; padding: 0.45rem 0.75rem 0.45rem 2rem;
+                          border: 1px solid var(--border); border-radius: 8px;
+                          background: var(--bg-page); color: var(--text-primary);
+                          font-size: 0.8rem;">
+        </div>
+    </div>
+    {% endif %}
+
     <div class="card-sp-body" style="padding: 0;">
         {% if repartos %}
 
         <!-- VISTA MÓVIL -->
         <div class="d-block d-md-none">
             {% for r in repartos %}
-            <div style="padding: 1rem; border-bottom: 1px solid var(--border); width: 100%; box-sizing: border-box;">
+            <div class="fila-alumno" data-nombre="{{ r.nombre }} {{ r.apellido }}" data-curso="{{ r.curso }}"
+                 style="padding: 1rem; border-bottom: 1px solid var(--border); width: 100%; box-sizing: border-box;">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; overflow: hidden;">
                     <div style="
                         width: 36px; height: 36px; border-radius: 50%;
@@ -79,14 +102,13 @@
                     </div>
                 </div>
                 <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0.75rem;">
-                    {% for p in r.pulseras %}
-                    <span style="
-                        background: var(--primary-light); color: var(--primary);
-                        border: 1px solid rgba(79,70,229,0.2);
-                        padding: 2px 8px; border-radius: 6px;
-                        font-size: 0.72rem; font-weight: 700;
-                    ">#{{ p }}</span>
-                    {% endfor %}
+                    {% if r.pulseras %}
+                        {% for p in r.pulseras %}
+                        <span style="background: var(--primary-light); color: var(--primary); border: 1px solid rgba(79,70,229,0.2); padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;">#{{ p }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span style="color: var(--text-muted); font-size: 0.775rem; font-style: italic;">Sin pulseras asignadas</span>
+                    {% endif %}
                 </div>
                 <div style="display: flex; gap: 6px;">
                     <a href="{{ url_for('reparto.asignar_existente', alumno_id=r.alumno_id) }}"
@@ -94,6 +116,7 @@
                         <i class="bi bi-tag-fill"></i>
                         Asignar
                     </a>
+                    {% if r.pulseras %}
                     <a href="{{ url_for('cobro.detalle', alumno_id=r.alumno_id) }}"
                        class="btn-sp-primary" style="flex: 1; justify-content: center; font-size: 0.775rem;">
                         <i class="bi bi-cash"></i>
@@ -105,6 +128,7 @@
                         <i class="bi bi-trash3-fill"></i>
                         Eliminar
                     </button>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -125,7 +149,7 @@
                     </thead>
                     <tbody>
                         {% for r in repartos %}
-                        <tr>
+                        <tr class="fila-alumno" data-nombre="{{ r.nombre }} {{ r.apellido }}" data-curso="{{ r.curso }}">
                             <td>
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <div style="
@@ -139,16 +163,15 @@
                             </td>
                             <td><span class="badge-sp badge-repartida">{{ r.curso }}</span></td>
                             <td>
+                                {% if r.pulseras %}
                                 <div style="display: flex; flex-wrap: wrap; gap: 4px;">
                                     {% for p in r.pulseras %}
-                                    <span style="
-                                        background: var(--primary-light); color: var(--primary);
-                                        border: 1px solid rgba(79,70,229,0.2);
-                                        padding: 2px 8px; border-radius: 6px;
-                                        font-size: 0.72rem; font-weight: 700;
-                                    ">#{{ p }}</span>
+                                    <span style="background: var(--primary-light); color: var(--primary); border: 1px solid rgba(79,70,229,0.2); padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;">#{{ p }}</span>
                                     {% endfor %}
                                 </div>
+                                {% else %}
+                                <span style="color: var(--text-muted); font-size: 0.775rem; font-style: italic;">Sin pulseras</span>
+                                {% endif %}
                             </td>
                             <td style="color: var(--text-muted); font-size: 0.775rem;">
                                 {{ r.fecha_reparto.strftime('%d/%m/%Y %H:%M') if r.fecha_reparto else '—' }}
@@ -160,6 +183,7 @@
                                         <i class="bi bi-tag-fill"></i>
                                         Asignar
                                     </a>
+                                    {% if r.pulseras %}
                                     <a href="{{ url_for('cobro.detalle', alumno_id=r.alumno_id) }}"
                                        class="btn-sp-primary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
                                         <i class="bi bi-cash"></i>
@@ -171,6 +195,7 @@
                                         <i class="bi bi-trash3-fill"></i>
                                         Eliminar
                                     </button>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
@@ -178,12 +203,16 @@
                     </tbody>
                 </table>
             </div>
+            <div id="sin-resultados" style="display: none; padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.875rem;">
+                <i class="bi bi-search" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
+                No se encontraron alumnos con ese filtro.
+            </div>
         </div>
 
         {% else %}
         <div class="empty-state">
             <i class="bi bi-people"></i>
-            <p>Todavía no se repartieron pulseras.</p>
+            <p>Todavía no hay alumnos cargados.</p>
             <a href="{{ url_for('reparto.descargar_modelo') }}" class="btn-sp-secondary" style="margin-bottom: 0.5rem;">
                 <i class="bi bi-download"></i>
                 Descargar modelo Excel
@@ -204,36 +233,19 @@
 <!-- MODAL CONFIRMAR ELIMINAR -->
 <div class="modal fade" id="modalEliminar" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-        ">
+        <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden;">
             <div style="padding: 1.5rem 1.5rem 0; display: flex; align-items: flex-start; gap: 1rem;">
-                <div style="
-                    width: 48px; height: 48px; border-radius: 12px;
-                    background: var(--danger-light);
-                    display: flex; align-items: center; justify-content: center;
-                    flex-shrink: 0;
-                ">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--danger-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class="bi bi-trash3-fill" style="color: var(--danger); font-size: 1.25rem;"></i>
                 </div>
                 <div style="min-width: 0; overflow: hidden;">
-                    <h5 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px;">
-                        Eliminar asignación
-                    </h5>
-                    <p style="font-size: 0.8375rem; color: var(--text-muted); margin: 0;">
-                        Esta acción no se puede deshacer.
-                    </p>
+                    <h5 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px;">Eliminar asignación</h5>
+                    <p style="font-size: 0.8375rem; color: var(--text-muted); margin: 0;">Esta acción no se puede deshacer.</p>
                 </div>
             </div>
-
             <div style="padding: 1.25rem 1.5rem;">
                 <div style="background: var(--bg-page); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.125rem; margin-bottom: 1rem;">
-                    <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">
-                        Alumno a eliminar
-                    </div>
+                    <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">Alumno a eliminar</div>
                     <div id="modal-alumno-nombre" style="font-weight: 700; font-size: 0.9375rem; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></div>
                     <div id="modal-alumno-curso" style="font-size: 0.775rem; color: var(--text-muted); margin-top: 2px;"></div>
                     <div id="modal-alumno-pulseras" style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px;"></div>
@@ -243,13 +255,8 @@
                     Las pulseras volverán a quedar disponibles para ser asignadas.
                 </div>
             </div>
-
             <div style="padding: 0 1.5rem 1.5rem; display: flex; gap: 0.75rem;">
-                <button type="button" class="btn-sp-secondary"
-                        style="flex: 1; justify-content: center;"
-                        data-bs-dismiss="modal">
-                    Cancelar
-                </button>
+                <button type="button" class="btn-sp-secondary" style="flex: 1; justify-content: center;" data-bs-dismiss="modal">Cancelar</button>
                 <form id="form-eliminar" method="POST">
                     <button type="submit" class="btn-sp-danger" style="padding: 0.575rem 1.5rem;">
                         <i class="bi bi-trash3-fill"></i>
@@ -265,6 +272,32 @@
 
 {% block scripts %}
 <script>
+    const filtroNombre = document.getElementById('filtro-nombre');
+    const filtroCurso = document.getElementById('filtro-curso');
+
+    function filtrar() {
+        const nombre = (filtroNombre?.value || '').toLowerCase().trim();
+        const curso = (filtroCurso?.value || '').toLowerCase().trim();
+        const filas = document.querySelectorAll('.fila-alumno');
+        let visibles = 0;
+
+        filas.forEach(fila => {
+            const fn = fila.dataset.nombre.toLowerCase();
+            const fc = fila.dataset.curso.toLowerCase();
+            const matchNombre = !nombre || fn.includes(nombre);
+            const matchCurso = !curso || fc.includes(curso);
+            const mostrar = matchNombre && matchCurso;
+            fila.style.display = mostrar ? '' : 'none';
+            if (mostrar) visibles++;
+        });
+
+        const sinResultados = document.getElementById('sin-resultados');
+        if (sinResultados) sinResultados.style.display = visibles === 0 ? 'block' : 'none';
+    }
+
+    filtroNombre?.addEventListener('input', filtrar);
+    filtroCurso?.addEventListener('input', filtrar);
+
     function abrirModal(alumnoId, nombre, curso, pulseras) {
         document.getElementById('modal-alumno-nombre').textContent = nombre;
         document.getElementById('modal-alumno-curso').textContent = 'Curso: ' + curso;
@@ -276,13 +309,10 @@
             const span = document.createElement('span');
             span.textContent = '#' + p;
             span.style.cssText = `
-                background: var(--primary-light);
-                color: var(--primary);
+                background: var(--primary-light); color: var(--primary);
                 border: 1px solid rgba(79,70,229,0.2);
-                padding: 2px 8px;
-                border-radius: 6px;
-                font-size: 0.72rem;
-                font-weight: 700;
+                padding: 2px 8px; border-radius: 6px;
+                font-size: 0.72rem; font-weight: 700;
             `;
             contenedor.appendChild(span);
         });

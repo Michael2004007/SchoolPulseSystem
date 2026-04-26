@@ -7,31 +7,31 @@
 
 <!-- STATS -->
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
-    <div class="stat-card" style="min-width: 0; overflow: hidden;">
-        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary); flex-shrink: 0;">
+    <div class="stat-card" style="min-width: 0; overflow: hidden; padding: 0.75rem 0.5rem;">
+        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary); flex-shrink: 0; width: 32px; height: 32px; font-size: 0.875rem;">
             <i class="bi bi-people-fill"></i>
         </div>
-        <div style="min-width: 0; overflow: hidden;">
-            <div class="stat-value">{{ total_alumnos }}</div>
-            <div class="stat-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Alumnos</div>
+        <div style="min-width: 0;">
+            <div class="stat-value" style="font-size: 1.25rem;">{{ total_alumnos }}</div>
+            <div class="stat-label" style="font-size: 0.65rem; white-space: normal;">Alumnos</div>
         </div>
     </div>
-    <div class="stat-card" style="min-width: 0; overflow: hidden;">
-        <div class="stat-icon" style="background: var(--warning-light); color: var(--warning); flex-shrink: 0;">
+    <div class="stat-card" style="min-width: 0; overflow: hidden; padding: 0.75rem 0.5rem;">
+        <div class="stat-icon" style="background: var(--warning-light); color: var(--warning); flex-shrink: 0; width: 32px; height: 32px; font-size: 0.875rem;">
             <i class="bi bi-tag-fill"></i>
         </div>
-        <div style="min-width: 0; overflow: hidden;">
-            <div class="stat-value">{{ total_pulseras }}</div>
-            <div class="stat-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Repartidas</div>
+        <div style="min-width: 0;">
+            <div class="stat-value" style="font-size: 1.25rem;">{{ total_pulseras }}</div>
+            <div class="stat-label" style="font-size: 0.65rem; white-space: normal;">Repartidas</div>
         </div>
     </div>
-    <div class="stat-card" style="min-width: 0; overflow: hidden;">
-        <div class="stat-icon" style="background: var(--success-light); color: var(--success); flex-shrink: 0;">
+    <div class="stat-card" style="min-width: 0; overflow: hidden; padding: 0.75rem 0.5rem;">
+        <div class="stat-icon" style="background: var(--success-light); color: var(--success); flex-shrink: 0; width: 32px; height: 32px; font-size: 0.875rem;">
             <i class="bi bi-check-circle-fill"></i>
         </div>
-        <div style="min-width: 0; overflow: hidden;">
-            <div class="stat-value">{{ disponibles }}</div>
-            <div class="stat-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Disponibles</div>
+        <div style="min-width: 0;">
+            <div class="stat-value" style="font-size: 1.25rem;">{{ disponibles }}</div>
+            <div class="stat-label" style="font-size: 0.65rem; white-space: normal;">Disponibles</div>
         </div>
     </div>
 </div>

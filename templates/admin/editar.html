@@ -31,19 +31,22 @@
                 <div class="form-sp-group">
                     <label class="form-sp-label">Nombre completo</label>
                     <input type="text" name="nombre" class="form-sp-control"
-                           value="{{ usuario.nombre }}" required>
+                           value="{{ usuario.nombre }}" required
+                           style="font-size: 16px;">
                 </div>
 
                 <div class="form-sp-group">
                     <label class="form-sp-label">Usuario</label>
                     <input type="text" name="username" class="form-sp-control"
-                           value="{{ usuario.username }}" required>
+                           value="{{ usuario.username }}" required
+                           style="font-size: 16px;">
                 </div>
 
                 <div class="form-sp-group">
                     <label class="form-sp-label">Nueva contraseña</label>
                     <input type="password" name="password" class="form-sp-control"
-                           placeholder="Dejá vacío para no cambiar">
+                           placeholder="Dejá vacío para no cambiar"
+                           style="font-size: 16px;">
                     <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
                         <i class="bi bi-info-circle me-1"></i>
                         Si dejás vacío, la contraseña no cambia.
@@ -52,17 +55,17 @@
 
                 <div class="form-sp-group">
                     <label class="form-sp-label">Rol y acceso</label>
-                    <select name="rol" class="form-sp-control">
-                        <option value="cobrador" {% if usuario.rol =='cobrador' %}selected{% endif %}>
+                    <select name="rol" class="form-sp-control" style="font-size: 16px;">
+                        <option value="cobrador" {% if usuario.rol == 'cobrador' %}selected{% endif %}>
                             Cobrador — Reparto y Cobro
                         </option>
-                        <option value="porton" {% if usuario.rol =='porton' %}selected{% endif %}>
+                        <option value="porton" {% if usuario.rol == 'porton' %}selected{% endif %}>
                             Portón — Solo pantalla de portón
                         </option>
-                        <option value="reportes" {% if usuario.rol =='reportes' %}selected{% endif %}>
+                        <option value="reportes" {% if usuario.rol == 'reportes' %}selected{% endif %}>
                             Reportes — Solo visualización
                         </option>
-                        <option value="admin" {% if usuario.rol =='admin' %}selected{% endif %}>
+                        <option value="admin" {% if usuario.rol == 'admin' %}selected{% endif %}>
                             Admin — Acceso total
                         </option>
                     </select>

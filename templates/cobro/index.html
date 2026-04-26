@@ -6,14 +6,14 @@
 {% block contenido %}
 
 <!-- STATS -->
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
     <div class="stat-card">
         <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
             <i class="bi bi-clock-fill"></i>
         </div>
         <div>
             <div class="stat-value">{{ pendientes }}</div>
-            <div class="stat-label">Pendientes de cobro</div>
+            <div class="stat-label">Pendientes</div>
         </div>
     </div>
     <div class="stat-card">
@@ -22,7 +22,7 @@
         </div>
         <div>
             <div class="stat-value">{{ pagados }}</div>
-            <div class="stat-label">Alumnos pagados</div>
+            <div class="stat-label">Pagados</div>
         </div>
     </div>
     <div class="stat-card">
@@ -31,7 +31,7 @@
         </div>
         <div>
             <div class="stat-value">{{ total }}</div>
-            <div class="stat-label">Total alumnos</div>
+            <div class="stat-label">Total</div>
         </div>
     </div>
 </div>
@@ -40,31 +40,33 @@
 <div class="card-sp" style="margin-bottom: 1.25rem;">
     <div class="card-sp-body">
         <form method="GET" action="{{ url_for('cobro.index') }}">
-            <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end;">
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                 <div class="form-sp-group" style="margin-bottom: 0;">
                     <label class="form-sp-label">
-                        <i class="bi bi-search me-1"></i>Buscar por nombre o apellido
+                        <i class="bi bi-search me-1"></i>Nombre o apellido
                     </label>
                     <div class="search-wrap">
                         <i class="bi bi-search"></i>
                         <input type="text" name="busqueda" class="form-sp-control"
                                placeholder="Ej: Juan Pérez"
-                               value="{{ busqueda }}">
+                               value="{{ busqueda }}"
+                               style="font-size: 16px;">
                     </div>
                 </div>
                 <div class="form-sp-group" style="margin-bottom: 0;">
                     <label class="form-sp-label">
-                        <i class="bi bi-mortarboard me-1"></i>Buscar por curso
+                        <i class="bi bi-mortarboard me-1"></i>Curso
                     </label>
                     <div class="search-wrap">
                         <i class="bi bi-search"></i>
                         <input type="text" name="curso" class="form-sp-control"
-                               placeholder="Ej: 3ro B"
-                               value="{{ curso }}">
+                               placeholder="Ej: 3 A"
+                               value="{{ curso }}"
+                               style="font-size: 16px;">
                     </div>
                 </div>
                 <div style="display: flex; gap: 0.5rem;">
-                    <button type="submit" class="btn-sp-primary">
+                    <button type="submit" class="btn-sp-primary" style="flex: 1; justify-content: center;">
                         <i class="bi bi-search"></i>
                         Buscar
                     </button>
@@ -77,7 +79,7 @@
     </div>
 </div>
 
-<!-- TABLA -->
+<!-- LISTA -->
 <div class="card-sp">
     <div class="card-sp-header">
         <span class="card-sp-title">
@@ -86,82 +88,103 @@
         </span>
         {% if busqueda or curso %}
         <span style="font-size: 0.775rem; color: var(--text-muted);">
-            {{ alumnos|length }} resultado(s) encontrado(s)
+            {{ alumnos|length }} resultado(s)
         </span>
         {% endif %}
     </div>
 
     <div class="card-sp-body" style="padding: 0;">
         {% if alumnos %}
-        <div style="overflow-x: auto;">
-            <table class="table-sp">
-                <thead>
-                    <tr>
-                        <th>Alumno</th>
-                        <th>Curso</th>
-                        <th>Pulseras</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for a in alumnos %}
-                    <tr>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="
-                                    width: 34px; height: 34px;
-                                    border-radius: 50%;
-                                    background: var(--primary-light);
-                                    color: var(--primary);
-                                    display: flex; align-items: center; justify-content: center;
-                                    font-size: 0.72rem; font-weight: 700;
-                                    flex-shrink: 0;
-                                ">
-                                    {{ a.nombre[0] }}{{ a.apellido[0] }}
-                                </div>
-                                <div style="font-weight: 600; font-size: 0.875rem;">
-                                    {{ a.nombre }} {{ a.apellido }}
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge-sp badge-repartida">{{ a.curso }}</span>
-                        </td>
-                        <td>
-                            <span style="font-weight: 700; color: var(--primary); font-family: 'Syne', sans-serif;">
-                                {{ a.total_pulseras }}
-                            </span>
-                            <span style="color: var(--text-muted); font-size: 0.775rem;"> pulseras</span>
-                        </td>
-                        <td>
-                            {% if a.todas_pagadas %}
-                                <span class="badge-sp badge-pagada">
-                                    <i class="bi bi-check-circle-fill"></i> Pagado
-                                </span>
-                            {% elif a.algunas_pagadas %}
-                                <span class="badge-sp badge-repartida">
-                                    <i class="bi bi-clock-fill"></i> Parcial
-                                </span>
-                            {% else %}
-                                <span class="badge-sp badge-disponible">
-                                    <i class="bi bi-circle"></i> Pendiente
-                                </span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ url_for('cobro.detalle', alumno_id=a.id) }}"
-                               class="btn-sp-primary"
-                               style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
-                                <i class="bi bi-cash"></i>
-                                Ver detalle
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+        <!-- VISTA MÓVIL -->
+        <div class="d-block d-md-none">
+            {% for a in alumnos %}
+            <div style="padding: 1rem; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="
+                            width: 36px; height: 36px; border-radius: 50%;
+                            background: var(--primary-light); color: var(--primary);
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+                        ">{{ a.nombre[0] }}{{ a.apellido[0] }}</div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.875rem;">{{ a.nombre }} {{ a.apellido }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ a.curso }} · {{ a.total_pulseras }} pulseras</div>
+                        </div>
+                    </div>
+                    {% if a.todas_pagadas %}
+                        <span class="badge-sp badge-pagada"><i class="bi bi-check-circle-fill"></i> Pagado</span>
+                    {% elif a.algunas_pagadas %}
+                        <span class="badge-sp badge-repartida"><i class="bi bi-clock-fill"></i> Parcial</span>
+                    {% else %}
+                        <span class="badge-sp badge-disponible"><i class="bi bi-circle"></i> Pendiente</span>
+                    {% endif %}
+                </div>
+                <a href="{{ url_for('cobro.detalle', alumno_id=a.id) }}"
+                   class="btn-sp-primary" style="width: 100%; justify-content: center;">
+                    <i class="bi bi-cash"></i>
+                    Ver detalle
+                </a>
+            </div>
+            {% endfor %}
         </div>
+
+        <!-- VISTA ESCRITORIO -->
+        <div class="d-none d-md-block">
+            <div style="overflow-x: auto;">
+                <table class="table-sp">
+                    <thead>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Curso</th>
+                            <th>Pulseras</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in alumnos %}
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="
+                                        width: 34px; height: 34px; border-radius: 50%;
+                                        background: var(--primary-light); color: var(--primary);
+                                        display: flex; align-items: center; justify-content: center;
+                                        font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+                                    ">{{ a.nombre[0] }}{{ a.apellido[0] }}</div>
+                                    <div style="font-weight: 600; font-size: 0.875rem;">{{ a.nombre }} {{ a.apellido }}</div>
+                                </div>
+                            </td>
+                            <td><span class="badge-sp badge-repartida">{{ a.curso }}</span></td>
+                            <td>
+                                <span style="font-weight: 700; color: var(--primary); font-family: 'Bricolage Grotesque', sans-serif;">{{ a.total_pulseras }}</span>
+                                <span style="color: var(--text-muted); font-size: 0.775rem;"> pulseras</span>
+                            </td>
+                            <td>
+                                {% if a.todas_pagadas %}
+                                    <span class="badge-sp badge-pagada"><i class="bi bi-check-circle-fill"></i> Pagado</span>
+                                {% elif a.algunas_pagadas %}
+                                    <span class="badge-sp badge-repartida"><i class="bi bi-clock-fill"></i> Parcial</span>
+                                {% else %}
+                                    <span class="badge-sp badge-disponible"><i class="bi bi-circle"></i> Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('cobro.detalle', alumno_id=a.id) }}"
+                                   class="btn-sp-primary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
+                                    <i class="bi bi-cash"></i>
+                                    Ver detalle
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         {% else %}
         <div class="empty-state">
             <i class="bi bi-search"></i>

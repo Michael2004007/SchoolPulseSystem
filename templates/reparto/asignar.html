@@ -38,12 +38,14 @@
                         <label class="form-sp-label">Nombre</label>
                         <input type="text" name="nombre" id="campo-nombre" class="form-sp-control"
                                placeholder="Ej: Juan" required
+                               style="font-size: 16px;"
                                value="{{ form_data.nombre if form_data else '' }}">
                     </div>
                     <div class="form-sp-group">
                         <label class="form-sp-label">Apellido</label>
                         <input type="text" name="apellido" id="campo-apellido" class="form-sp-control"
                                placeholder="Ej: Pérez" required
+                               style="font-size: 16px;"
                                value="{{ form_data.apellido if form_data else '' }}">
                     </div>
                 </div>
@@ -51,8 +53,8 @@
                 <div class="form-sp-group">
                     <label class="form-sp-label">Curso</label>
                     <input type="text" name="curso" id="campo-curso" class="form-sp-control"
-                           placeholder="Ej: 3 A"
-                           required
+                           placeholder="Ej: 3 A" required
+                           style="font-size: 16px;"
                            value="{{ form_data.curso if form_data else '' }}"
                            oninput="this.value = this.value.toUpperCase().replace(/\s+/g, ' ')">
                     <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
@@ -66,9 +68,8 @@
                 </div>
 
                 <div style="background: var(--success-light); border: 1px solid rgba(5,150,105,0.2); border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--success);">
-                    <i class="bi bi-info-circle-fill"></i>
-                    Pulseras disponibles: <strong>{{ disponibles }}</strong>
-                    — Próxima disponible: <strong>#{{ proxima }}</strong>
+                    <i class="bi bi-info-circle-fill" style="flex-shrink: 0;"></i>
+                    Disponibles: <strong>{{ disponibles }}</strong> — Próxima: <strong>#{{ proxima }}</strong>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
@@ -76,16 +77,16 @@
                         <label class="form-sp-label"><i class="bi bi-hash me-1"></i>Desde</label>
                         <input type="number" name="pulsera_desde" id="campo-desde"
                                class="form-sp-control" placeholder="Ej: 1"
-                               min="1" required
-                               style="font-size: 1rem; font-weight: 700; text-align: center;"
+                               min="1" required inputmode="numeric"
+                               style="font-size: 16px; font-weight: 700; text-align: center;"
                                value="{{ form_data.pulsera_desde if form_data else '' }}">
                     </div>
                     <div class="form-sp-group" style="margin-bottom: 0;">
                         <label class="form-sp-label"><i class="bi bi-hash me-1"></i>Hasta</label>
                         <input type="number" name="pulsera_hasta" id="campo-hasta"
                                class="form-sp-control" placeholder="Ej: 10"
-                               min="1" required
-                               style="font-size: 1rem; font-weight: 700; text-align: center;"
+                               min="1" required inputmode="numeric"
+                               style="font-size: 16px; font-weight: 700; text-align: center;"
                                value="{{ form_data.pulsera_hasta if form_data else '' }}">
                     </div>
                 </div>
@@ -176,7 +177,6 @@
     const preview = document.getElementById('preview');
     const campoCurso = document.getElementById('campo-curso');
 
-    // Normalizar curso al perder el foco — elimina espacios dobles y convierte a mayúsculas
     campoCurso.addEventListener('blur', function() {
         this.value = this.value.toUpperCase().replace(/\s+/g, ' ').trim();
     });

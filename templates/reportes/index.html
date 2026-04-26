@@ -6,14 +6,14 @@
 {% block contenido %}
 
 <!-- STATS GENERALES -->
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
     <div class="stat-card">
         <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
             <i class="bi bi-tag-fill"></i>
         </div>
         <div>
             <div class="stat-value">{{ total }}</div>
-            <div class="stat-label">Total pulseras</div>
+            <div class="stat-label">Total</div>
         </div>
     </div>
     <div class="stat-card">
@@ -22,7 +22,7 @@
         </div>
         <div>
             <div class="stat-value">{{ repartidas }}</div>
-            <div class="stat-label">Pendientes de cobro</div>
+            <div class="stat-label">Pendientes</div>
         </div>
     </div>
     <div class="stat-card">
@@ -39,28 +39,28 @@
             <i class="bi bi-cash-stack"></i>
         </div>
         <div>
-            <div class="stat-value">{{ "{:,.0f}".format(total_recaudado).replace(',', '.') }}</div>
+            <div class="stat-value" style="font-size: 1rem;">{{ "{:,.0f}".format(total_recaudado).replace(',', '.') }}</div>
             <div class="stat-label">Gs. recaudados</div>
         </div>
     </div>
 </div>
 
 <!-- ACCESOS RÁPIDOS -->
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 1.75rem;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
 
     <a href="{{ url_for('reportes.pulseras') }}" style="text-decoration: none;">
         <div class="card-sp" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
              onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'"
              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
-            <div class="card-sp-body" style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+            <div class="card-sp-body" style="display: flex; align-items: center; gap: 0.875rem;">
+                <div style="width: 42px; height: 42px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
                     <i class="bi bi-tag-fill"></i>
                 </div>
-                <div>
-                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px;">Pulseras</div>
-                    <div style="font-size: 0.775rem; color: var(--text-muted);">Estado de todas las pulseras</div>
+                <div style="min-width: 0;">
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.875rem; color: var(--text-primary);">Pulseras</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Estado general</div>
                 </div>
-                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto;"></i>
+                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto; flex-shrink: 0;"></i>
             </div>
         </div>
     </a>
@@ -69,15 +69,15 @@
         <div class="card-sp" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
              onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'"
              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
-            <div class="card-sp-body" style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--warning-light); color: var(--warning); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+            <div class="card-sp-body" style="display: flex; align-items: center; gap: 0.875rem;">
+                <div style="width: 42px; height: 42px; border-radius: 12px; background: var(--warning-light); color: var(--warning); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
                     <i class="bi bi-clock-fill"></i>
                 </div>
-                <div>
-                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px;">Deudores</div>
-                    <div style="font-size: 0.775rem; color: var(--text-muted);">Alumnos que aún no pagaron</div>
+                <div style="min-width: 0;">
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.875rem; color: var(--text-primary);">Deudores</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Sin pagar</div>
                 </div>
-                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto;"></i>
+                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto; flex-shrink: 0;"></i>
             </div>
         </div>
     </a>
@@ -86,15 +86,15 @@
         <div class="card-sp" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
              onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'"
              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
-            <div class="card-sp-body" style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--success-light); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+            <div class="card-sp-body" style="display: flex; align-items: center; gap: 0.875rem;">
+                <div style="width: 42px; height: 42px; border-radius: 12px; background: var(--success-light); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
                     <i class="bi bi-check-circle-fill"></i>
                 </div>
-                <div>
-                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px;">Pagados</div>
-                    <div style="font-size: 0.775rem; color: var(--text-muted);">Alumnos que ya pagaron</div>
+                <div style="min-width: 0;">
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.875rem; color: var(--text-primary);">Pagados</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Ya pagaron</div>
                 </div>
-                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto;"></i>
+                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto; flex-shrink: 0;"></i>
             </div>
         </div>
     </a>
@@ -103,15 +103,15 @@
         <div class="card-sp" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
              onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'"
              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
-            <div class="card-sp-body" style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+            <div class="card-sp-body" style="display: flex; align-items: center; gap: 0.875rem;">
+                <div style="width: 42px; height: 42px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
                     <i class="bi bi-mortarboard-fill"></i>
                 </div>
-                <div>
-                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px;">Por Curso</div>
-                    <div style="font-size: 0.775rem; color: var(--text-muted);">Lista de alumnos por curso</div>
+                <div style="min-width: 0;">
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.875rem; color: var(--text-primary);">Por Curso</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Por curso</div>
                 </div>
-                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto;"></i>
+                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto; flex-shrink: 0;"></i>
             </div>
         </div>
     </a>
@@ -119,24 +119,24 @@
 </div>
 
 <!-- PREVISIONES -->
-<div style="margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+<div style="margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
     <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9375rem; color: var(--text-primary);">
         <i class="bi bi-graph-up-arrow me-2" style="color: var(--primary);"></i>
-        Previsiones de recaudación
+        Previsiones
     </span>
     <a href="{{ url_for('reportes.pdf_general') }}" class="btn-sp-danger">
         <i class="bi bi-file-pdf-fill"></i>
-        Descargar PDF
+        PDF
     </a>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
     <div class="stat-card" style="border-left: 3px solid var(--success);">
         <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
             <i class="bi bi-cash-coin"></i>
         </div>
-        <div>
-            <div class="stat-value" style="color: var(--success); font-size: 1.05rem;">
+        <div style="min-width: 0;">
+            <div class="stat-value" style="color: var(--success); font-size: 0.875rem;">
                 Gs. {{ "{:,.0f}".format(ya_cobrado).replace(',', '.') }}
             </div>
             <div class="stat-label">Ya cobrado</div>
@@ -146,8 +146,8 @@
         <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
             <i class="bi bi-hourglass-split"></i>
         </div>
-        <div>
-            <div class="stat-value" style="color: var(--warning); font-size: 1.05rem;">
+        <div style="min-width: 0;">
+            <div class="stat-value" style="color: var(--warning); font-size: 0.875rem;">
                 Gs. {{ "{:,.0f}".format(por_cobrar).replace(',', '.') }}
             </div>
             <div class="stat-label">Falta cobrar</div>
@@ -157,8 +157,8 @@
         <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
             <i class="bi bi-graph-up-arrow"></i>
         </div>
-        <div>
-            <div class="stat-value" style="color: var(--primary); font-size: 1.05rem;">
+        <div style="min-width: 0;">
+            <div class="stat-value" style="color: var(--primary); font-size: 0.875rem;">
                 Gs. {{ "{:,.0f}".format(potencial_asignadas).replace(',', '.') }}
             </div>
             <div class="stat-label">Potencial asignadas</div>
@@ -168,8 +168,8 @@
         <div class="stat-icon" style="background: var(--bg-hover); color: var(--text-muted);">
             <i class="bi bi-stars"></i>
         </div>
-        <div>
-            <div class="stat-value" style="font-size: 1.05rem;">
+        <div style="min-width: 0;">
+            <div class="stat-value" style="font-size: 0.875rem;">
                 Gs. {{ "{:,.0f}".format(potencial_total).replace(',', '.') }}
             </div>
             <div class="stat-label">Potencial máximo</div>
@@ -185,7 +185,7 @@
             Progreso de cobro
         </span>
         <span style="font-size: 0.775rem; color: var(--text-muted);">
-            {{ pagadas }} de {{ repartidas + pagadas }} pulseras cobradas
+            {{ pagadas }} de {{ repartidas + pagadas }}
         </span>
     </div>
     <div class="card-sp-body">
@@ -204,18 +204,18 @@
                 transition: width 1s ease;
             "></div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.25rem; text-align: center;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1rem; text-align: center;">
             <div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Disponibles</div>
-                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--text-secondary); font-size: 1.125rem;">{{ disponibles }}</div>
+                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Disponibles</div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--text-secondary); font-size: 1rem;">{{ disponibles }}</div>
             </div>
             <div>
-                <div style="font-size: 0.72rem; color: var(--warning); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Pendientes</div>
-                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--warning); font-size: 1.125rem;">{{ repartidas }}</div>
+                <div style="font-size: 0.65rem; color: var(--warning); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Pendientes</div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--warning); font-size: 1rem;">{{ repartidas }}</div>
             </div>
             <div>
-                <div style="font-size: 0.72rem; color: var(--success); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Cobradas</div>
-                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--success); font-size: 1.125rem;">{{ pagadas }}</div>
+                <div style="font-size: 0.65rem; color: var(--success); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Cobradas</div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--success); font-size: 1rem;">{{ pagadas }}</div>
             </div>
         </div>
     </div>

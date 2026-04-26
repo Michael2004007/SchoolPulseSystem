@@ -6,12 +6,11 @@
 {% block contenido %}
 
 <!-- VOLVER -->
-<div style="margin-bottom: 1.75rem;">
+<div style="margin-bottom: 1.25rem;">
     <a href="{{ url_for('cobro.index') }}" style="
         display: inline-flex; align-items: center; gap: 6px;
         color: var(--text-muted); text-decoration: none;
-        font-size: 0.8rem; font-weight: 500;
-        transition: color 0.18s;
+        font-size: 0.8rem; font-weight: 500; transition: color 0.18s;
     " onmouseover="this.style.color='var(--primary)'"
        onmouseout="this.style.color='var(--text-muted)'">
         <i class="bi bi-arrow-left"></i>
@@ -20,44 +19,39 @@
 </div>
 
 <!-- INFO ALUMNO -->
-<div class="card-sp" style="margin-bottom: 1.5rem;">
+<div class="card-sp" style="margin-bottom: 1.25rem;">
     <div class="card-sp-body">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="
-                    width: 52px; height: 52px;
-                    border-radius: 50%;
-                    background: var(--primary-light);
-                    color: var(--primary);
-                    display: flex; align-items: center; justify-content: center;
-                    font-size: 1rem; font-weight: 800;
-                    font-family: 'Syne', sans-serif;
-                    flex-shrink: 0;
-                ">
-                    {{ alumno.nombre[0] }}{{ alumno.apellido[0] }}
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+            <div style="
+                width: 48px; height: 48px; border-radius: 50%;
+                background: var(--primary-light); color: var(--primary);
+                display: flex; align-items: center; justify-content: center;
+                font-size: 1rem; font-weight: 800; flex-shrink: 0;
+                font-family: 'Bricolage Grotesque', sans-serif;
+            ">{{ alumno.nombre[0] }}{{ alumno.apellido[0] }}</div>
+            <div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary);">
+                    {{ alumno.nombre }} {{ alumno.apellido }}
                 </div>
-                <div>
-                    <div style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.125rem; color: var(--text-primary);">
-                        {{ alumno.nombre }} {{ alumno.apellido }}
-                    </div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
-                        <i class="bi bi-mortarboard me-1"></i>{{ alumno.curso }}
-                    </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+                    <i class="bi bi-mortarboard me-1"></i>{{ alumno.curso }}
                 </div>
             </div>
-            <div style="display: flex; gap: 1rem; text-align: center;">
-                <div style="background: var(--bg-page); border: 1px solid var(--border); border-radius: 12px; padding: 0.75rem 1.25rem;">
-                    <div style="font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">{{ total_pulseras }}</div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total</div>
-                </div>
-                <div style="background: var(--success-light); border: 1px solid rgba(5,150,105,0.2); border-radius: 12px; padding: 0.75rem 1.25rem;">
-                    <div style="font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--success);">{{ pagadas }}</div>
-                    <div style="font-size: 0.7rem; color: var(--success); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pagadas</div>
-                </div>
-                <div style="background: var(--warning-light); border: 1px solid rgba(217,119,6,0.2); border-radius: 12px; padding: 0.75rem 1.25rem;">
-                    <div style="font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--warning);">{{ pendientes }}</div>
-                    <div style="font-size: 0.7rem; color: var(--warning); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pendientes</div>
-                </div>
+        </div>
+
+        <!-- STATS EN FILA -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+            <div style="background: var(--bg-page); border: 1px solid var(--border); border-radius: 12px; padding: 0.75rem; text-align: center;">
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">{{ total_pulseras }}</div>
+                <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total</div>
+            </div>
+            <div style="background: var(--success-light); border: 1px solid rgba(5,150,105,0.2); border-radius: 12px; padding: 0.75rem; text-align: center;">
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--success);">{{ pagadas }}</div>
+                <div style="font-size: 0.65rem; color: var(--success); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pagadas</div>
+            </div>
+            <div style="background: var(--warning-light); border: 1px solid rgba(217,119,6,0.2); border-radius: 12px; padding: 0.75rem; text-align: center;">
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.25rem; font-weight: 800; color: var(--warning);">{{ pendientes }}</div>
+                <div style="font-size: 0.65rem; color: var(--warning); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pendientes</div>
             </div>
         </div>
     </div>
@@ -72,61 +66,101 @@
         </span>
     </div>
     <div class="card-sp-body" style="padding: 0;">
-        <table class="table-sp">
-            <thead>
-                <tr>
-                    <th># Pulsera</th>
-                    <th>Estado</th>
-                    <th>Fecha cobro</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in pulseras %}
-                <tr>
-                    <td>
-                        <span style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--primary);">
-                            #{{ p.pulsera_id }}
-                        </span>
-                    </td>
-                    <td>
+
+        <!-- VISTA MÓVIL -->
+        <div class="d-block d-md-none">
+            {% for p in pulseras %}
+            <div style="padding: 1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+                <div>
+                    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: var(--primary);">#{{ p.pulsera_id }}</span>
+                    <div style="margin-top: 4px;">
                         {% if p.estado == 'pagada' %}
-                            <span class="badge-sp badge-pagada">
-                                <i class="bi bi-check-circle-fill"></i> Pagada
-                            </span>
+                            <span class="badge-sp badge-pagada"><i class="bi bi-check-circle-fill"></i> Pagada</span>
                         {% else %}
-                            <span class="badge-sp badge-repartida">
-                                <i class="bi bi-clock-fill"></i> Pendiente
-                            </span>
+                            <span class="badge-sp badge-repartida"><i class="bi bi-clock-fill"></i> Pendiente</span>
                         {% endif %}
-                    </td>
-                    <td style="color: var(--text-muted); font-size: 0.775rem;">
-                        {{ p.fecha_cobro.strftime('%d/%m/%Y %H:%M') if p.fecha_cobro else '—' }}
-                    </td>
-                    <td>
-                        {% if p.estado != 'pagada' %}
-                        <form method="POST" action="{{ url_for('cobro.pagar', pulsera_id=p.pulsera_id) }}">
-                            <input type="hidden" name="alumno_id" value="{{ alumno.id }}">
-                            <input type="hidden" name="monto" value="{{ monto_pulsera }}">
-                            <button type="submit" class="btn-sp-success">
-                                <i class="bi bi-check-lg"></i>
-                                Marcar pagado
-                            </button>
-                        </form>
-                        {% else %}
-                        <button type="button"
-                                class="btn-sp-warning"
-                                style="font-size: 0.775rem;"
-                                onclick="abrirModalDesmarcar('{{ p.pulsera_id }}')">
-                            <i class="bi bi-arrow-counterclockwise"></i>
-                            Desmarcar
+                    </div>
+                    {% if p.fecha_cobro %}
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">
+                        {{ p.fecha_cobro.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div style="flex-shrink: 0;">
+                    {% if p.estado != 'pagada' %}
+                    <form method="POST" action="{{ url_for('cobro.pagar', pulsera_id=p.pulsera_id) }}">
+                        <input type="hidden" name="alumno_id" value="{{ alumno.id }}">
+                        <input type="hidden" name="monto" value="{{ monto_pulsera }}">
+                        <button type="submit" class="btn-sp-success">
+                            <i class="bi bi-check-lg"></i>
+                            Pagar
                         </button>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    </form>
+                    {% else %}
+                    <button type="button" class="btn-sp-warning"
+                            onclick="abrirModalDesmarcar('{{ p.pulsera_id }}')">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        Desmarcar
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- VISTA ESCRITORIO -->
+        <div class="d-none d-md-block">
+            <table class="table-sp">
+                <thead>
+                    <tr>
+                        <th># Pulsera</th>
+                        <th>Estado</th>
+                        <th>Fecha cobro</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pulseras %}
+                    <tr>
+                        <td>
+                            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--primary);">
+                                #{{ p.pulsera_id }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if p.estado == 'pagada' %}
+                                <span class="badge-sp badge-pagada"><i class="bi bi-check-circle-fill"></i> Pagada</span>
+                            {% else %}
+                                <span class="badge-sp badge-repartida"><i class="bi bi-clock-fill"></i> Pendiente</span>
+                            {% endif %}
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.775rem;">
+                            {{ p.fecha_cobro.strftime('%d/%m/%Y %H:%M') if p.fecha_cobro else '—' }}
+                        </td>
+                        <td>
+                            {% if p.estado != 'pagada' %}
+                            <form method="POST" action="{{ url_for('cobro.pagar', pulsera_id=p.pulsera_id) }}">
+                                <input type="hidden" name="alumno_id" value="{{ alumno.id }}">
+                                <input type="hidden" name="monto" value="{{ monto_pulsera }}">
+                                <button type="submit" class="btn-sp-success">
+                                    <i class="bi bi-check-lg"></i>
+                                    Marcar pagado
+                                </button>
+                            </form>
+                            {% else %}
+                            <button type="button" class="btn-sp-warning" style="font-size: 0.775rem;"
+                                    onclick="abrirModalDesmarcar('{{ p.pulsera_id }}')">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                                Desmarcar
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 
@@ -149,7 +183,7 @@
                     <i class="bi bi-arrow-counterclockwise" style="color: var(--warning); font-size: 1.25rem;"></i>
                 </div>
                 <div>
-                    <h5 style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px;">
+                    <h5 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px;">
                         Desmarcar pulsera
                     </h5>
                     <p style="font-size: 0.8375rem; color: var(--text-muted); margin: 0;">
@@ -163,12 +197,11 @@
                     <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">
                         Pulsera a desmarcar
                     </div>
-                    <div id="modal-pulsera-numero" style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--primary);"></div>
+                    <div id="modal-pulsera-numero" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--primary);"></div>
                     <div style="font-size: 0.775rem; color: var(--text-muted); margin-top: 2px;">
                         Alumno: <strong>{{ alumno.nombre }} {{ alumno.apellido }}</strong>
                     </div>
                 </div>
-
                 <div style="background: var(--warning-light); border: 1px solid rgba(217,119,6,0.2); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--warning); display: flex; align-items: center; gap: 8px;">
                     <i class="bi bi-exclamation-triangle-fill" style="flex-shrink: 0;"></i>
                     El cobro registrado será eliminado y la pulsera quedará pendiente.

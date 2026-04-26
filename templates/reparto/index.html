@@ -44,6 +44,10 @@
             Listado de Repartos
         </span>
         <div style="display: flex; gap: 0.5rem;">
+            <a href="{{ url_for('reparto.descargar_modelo') }}" class="btn-sp-secondary" style="font-size: 0.775rem;">
+                <i class="bi bi-download"></i>
+                Modelo
+            </a>
             <a href="{{ url_for('reparto.cargar_excel') }}" class="btn-sp-secondary" style="font-size: 0.775rem;">
                 <i class="bi bi-file-earmark-excel-fill"></i>
                 Cargar Excel
@@ -180,6 +184,10 @@
         <div class="empty-state">
             <i class="bi bi-people"></i>
             <p>Todavía no se repartieron pulseras.</p>
+            <a href="{{ url_for('reparto.descargar_modelo') }}" class="btn-sp-secondary" style="margin-bottom: 0.5rem;">
+                <i class="bi bi-download"></i>
+                Descargar modelo Excel
+            </a>
             <a href="{{ url_for('reparto.cargar_excel') }}" class="btn-sp-secondary" style="margin-bottom: 0.5rem;">
                 <i class="bi bi-file-earmark-excel-fill"></i>
                 Cargar alumnos desde Excel

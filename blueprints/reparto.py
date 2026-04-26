@@ -205,3 +205,24 @@ def eliminar(alumno_id):
     else:
         flash('❌ Ocurrió un error al eliminar la asignación.', 'danger')
     return redirect(url_for('reparto.index'))
+@reparto_bp.route('/descargar_modelo')
+@login_required
+def descargar_modelo():
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = 'Alumnos'
+    ws.append(['Nombre', 'Apellido', 'Curso'])
+    ws.append(['Juan', 'Pérez', '3 A'])
+    ws.append(['María', 'González', '4 B'])
+
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    from flask import send_file
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name='modelo_alumnos.xlsx'
+    )

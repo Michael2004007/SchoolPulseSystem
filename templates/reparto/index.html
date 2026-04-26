@@ -43,10 +43,16 @@
             <i class="bi bi-people-fill me-2" style="color: var(--primary);"></i>
             Listado de Repartos
         </span>
-        <a href="{{ url_for('reparto.asignar') }}" class="btn-sp-primary">
-            <i class="bi bi-plus-lg"></i>
-            Asignar
-        </a>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{{ url_for('reparto.cargar_excel') }}" class="btn-sp-secondary" style="font-size: 0.775rem;">
+                <i class="bi bi-file-earmark-excel-fill"></i>
+                Cargar Excel
+            </a>
+            <a href="{{ url_for('reparto.asignar') }}" class="btn-sp-primary" style="font-size: 0.775rem;">
+                <i class="bi bi-plus-lg"></i>
+                Asignar
+            </a>
+        </div>
     </div>
 
     <div class="card-sp-body" style="padding: 0;">
@@ -79,6 +85,11 @@
                     {% endfor %}
                 </div>
                 <div style="display: flex; gap: 6px;">
+                    <a href="{{ url_for('reparto.asignar_existente', alumno_id=r.alumno_id) }}"
+                       class="btn-sp-secondary" style="flex: 1; justify-content: center; font-size: 0.775rem;">
+                        <i class="bi bi-tag-fill"></i>
+                        Asignar
+                    </a>
                     <a href="{{ url_for('cobro.detalle', alumno_id=r.alumno_id) }}"
                        class="btn-sp-primary" style="flex: 1; justify-content: center; font-size: 0.775rem;">
                         <i class="bi bi-cash"></i>
@@ -140,6 +151,11 @@
                             </td>
                             <td>
                                 <div style="display: flex; gap: 6px;">
+                                    <a href="{{ url_for('reparto.asignar_existente', alumno_id=r.alumno_id) }}"
+                                       class="btn-sp-secondary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
+                                        <i class="bi bi-tag-fill"></i>
+                                        Asignar
+                                    </a>
                                     <a href="{{ url_for('cobro.detalle', alumno_id=r.alumno_id) }}"
                                        class="btn-sp-primary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
                                         <i class="bi bi-cash"></i>
@@ -164,6 +180,10 @@
         <div class="empty-state">
             <i class="bi bi-people"></i>
             <p>Todavía no se repartieron pulseras.</p>
+            <a href="{{ url_for('reparto.cargar_excel') }}" class="btn-sp-secondary" style="margin-bottom: 0.5rem;">
+                <i class="bi bi-file-earmark-excel-fill"></i>
+                Cargar alumnos desde Excel
+            </a>
             <a href="{{ url_for('reparto.asignar') }}" class="btn-sp-primary">
                 <i class="bi bi-plus-lg"></i>
                 Asignar primeras pulseras

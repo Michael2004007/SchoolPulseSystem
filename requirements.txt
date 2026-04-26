@@ -4,3 +4,4 @@ mysql-connector-python
 reportlab
 werkzeug
 gunicorn
+openpyxl

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Reporte por Cursos — SchoolPulse{% endblock %}
+{% block page_title %}Reporte por Cursos{% endblock %}
+
+{% block contenido %}
+
+<div style="margin-bottom: 1.5rem;">
+    <a href="{{ url_for('reportes.index') }}" style="
+        display: inline-flex; align-items: center; gap: 6px;
+        color: var(--text-muted); text-decoration: none;
+        font-size: 0.8rem; font-weight: 500; transition: color 0.18s;
+    " onmouseover="this.style.color='var(--primary)'"
+       onmouseout="this.style.color='var(--text-muted)'">
+        <i class="bi bi-arrow-left"></i>
+        Volver a reportes
+    </a>
+</div>
+
+<div class="card-sp">
+    <div class="card-sp-header">
+        <span class="card-sp-title">
+            <i class="bi bi-mortarboard-fill me-2" style="color: var(--primary);"></i>
+            Cursos registrados
+        </span>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">{{ cursos|length }} cursos</span>
+    </div>
+    <div class="card-sp-body" style="padding: 0;">
+        {% if cursos %}
+        <table class="table-sp">
+            <thead>
+                <tr>
+                    <th>Curso</th>
+                    <th>Total alumnos</th>
+                    <th>Pagados</th>
+                    <th>Pendientes</th>
+                    <th>Progreso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in cursos %}
+                {% set porcentaje = ((c[2] / c[1]) * 100)|int if c[1] > 0 else 0 %}
+                <tr>
+                    <td>
+                        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--primary);">
+                            {{ c[0] }}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="font-weight: 600;">{{ c[1] }}</span>
+                        <span style="color: var(--text-muted);"> alumnos</span>
+                    </td>
+                    <td>
+                        <span class="badge-sp badge-pagada">
+                            <i class="bi bi-check-circle-fill"></i> {{ c[2] }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge-sp badge-repartida">
+                            <i class="bi bi-clock-fill"></i> {{ c[3] }}
+                        </span>
+                    </td>
+                    <td style="min-width: 140px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="flex: 1; background: var(--bg-page); border-radius: 20px; height: 6px; overflow: hidden; border: 1px solid var(--border);">
+                                <div style="height: 100%; width: {{ porcentaje }}%; background: var(--success); border-radius: 20px;"></div>
+                            </div>
+                            <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); min-width: 32px;">{{ porcentaje }}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 6px;">
+                            <a href="{{ url_for('reportes.detalle_curso', curso=c[0]) }}"
+                               class="btn-sp-primary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
+                                <i class="bi bi-list-ul"></i>
+                                Ver lista
+                            </a>
+                            <a href="{{ url_for('reparto.asignar') }}"
+                               class="btn-sp-secondary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
+                                <i class="bi bi-plus-lg"></i>
+                                Reparto
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-mortarboard"></i>
+            <p>No hay cursos registrados todavía.</p>
+            <a href="{{ url_for('reparto.asignar') }}" class="btn-sp-primary">
+                <i class="bi bi-plus-lg"></i>
+                Asignar primeras pulseras
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

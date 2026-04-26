@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Reportes — SchoolPulse{% endblock %}
+{% block page_title %}Reportes{% endblock %}
+
+{% block contenido %}
+
+<!-- STATS GENERALES -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
+            <i class="bi bi-tag-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ total }}</div>
+            <div class="stat-label">Total pulseras</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
+            <i class="bi bi-clock-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ repartidas }}</div>
+            <div class="stat-label">Pendientes de cobro</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ pagadas }}</div>
+            <div class="stat-label">Pagadas</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
+            <i class="bi bi-cash-stack"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ "{:,.0f}".format(total_recaudado).replace(',', '.') }}</div>
+            <div class="stat-label">Gs. recaudados</div>
+        </div>
+    </div>
+</div>
+
+<!-- ACCESOS RÁPIDOS -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 1.75rem;">
+
+    <a href="{{ url_for('reportes.pulseras') }}" style="text-decoration: none;">
+        <div class="card-sp" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
+             onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'"
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+            <div class="card-sp-body" style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+                    <i class="bi bi-tag-fill"></i>
+                </div>
+                <div>
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px;">Pulseras</div>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">Estado de todas las pulseras</div>
+                </div>
+                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto;"></i>
+            </div>
+        </div>
+    </a>
+
+    <a href="{{ url_for('reportes.deudores') }}" style="text-decoration: none;">
+        <div class="card-sp" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
+             onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'"
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+            <div class="card-sp-body" style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--warning-light); color: var(--warning); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+                    <i class="bi bi-clock-fill"></i>
+                </div>
+                <div>
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px;">Deudores</div>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">Alumnos que aún no pagaron</div>
+                </div>
+                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto;"></i>
+            </div>
+        </div>
+    </a>
+
+    <a href="{{ url_for('reportes.pagados') }}" style="text-decoration: none;">
+        <div class="card-sp" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
+             onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'"
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+            <div class="card-sp-body" style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--success-light); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div>
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px;">Pagados</div>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">Alumnos que ya pagaron</div>
+                </div>
+                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto;"></i>
+            </div>
+        </div>
+    </a>
+
+    <a href="{{ url_for('reportes.cursos') }}" style="text-decoration: none;">
+        <div class="card-sp" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
+             onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='var(--shadow-md)'"
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+            <div class="card-sp-body" style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <div>
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px;">Por Curso</div>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">Lista de alumnos por curso</div>
+                </div>
+                <i class="bi bi-chevron-right" style="color: var(--text-muted); margin-left: auto;"></i>
+            </div>
+        </div>
+    </a>
+
+</div>
+
+<!-- PREVISIONES -->
+<div style="margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9375rem; color: var(--text-primary);">
+        <i class="bi bi-graph-up-arrow me-2" style="color: var(--primary);"></i>
+        Previsiones de recaudación
+    </span>
+    <a href="{{ url_for('reportes.pdf_general') }}" class="btn-sp-danger">
+        <i class="bi bi-file-pdf-fill"></i>
+        Descargar PDF
+    </a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
+    <div class="stat-card" style="border-left: 3px solid var(--success);">
+        <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
+            <i class="bi bi-cash-coin"></i>
+        </div>
+        <div>
+            <div class="stat-value" style="color: var(--success); font-size: 1.05rem;">
+                Gs. {{ "{:,.0f}".format(ya_cobrado).replace(',', '.') }}
+            </div>
+            <div class="stat-label">Ya cobrado</div>
+        </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--warning);">
+        <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
+            <i class="bi bi-hourglass-split"></i>
+        </div>
+        <div>
+            <div class="stat-value" style="color: var(--warning); font-size: 1.05rem;">
+                Gs. {{ "{:,.0f}".format(por_cobrar).replace(',', '.') }}
+            </div>
+            <div class="stat-label">Falta cobrar</div>
+        </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--primary);">
+        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
+            <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <div>
+            <div class="stat-value" style="color: var(--primary); font-size: 1.05rem;">
+                Gs. {{ "{:,.0f}".format(potencial_asignadas).replace(',', '.') }}
+            </div>
+            <div class="stat-label">Potencial asignadas</div>
+        </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--text-muted);">
+        <div class="stat-icon" style="background: var(--bg-hover); color: var(--text-muted);">
+            <i class="bi bi-stars"></i>
+        </div>
+        <div>
+            <div class="stat-value" style="font-size: 1.05rem;">
+                Gs. {{ "{:,.0f}".format(potencial_total).replace(',', '.') }}
+            </div>
+            <div class="stat-label">Potencial máximo</div>
+        </div>
+    </div>
+</div>
+
+<!-- BARRA DE PROGRESO -->
+<div class="card-sp">
+    <div class="card-sp-header">
+        <span class="card-sp-title">
+            <i class="bi bi-graph-up me-2" style="color: var(--primary);"></i>
+            Progreso de cobro
+        </span>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">
+            {{ pagadas }} de {{ repartidas + pagadas }} pulseras cobradas
+        </span>
+    </div>
+    <div class="card-sp-body">
+        {% set porcentaje = ((pagadas / (repartidas + pagadas)) * 100) if (repartidas + pagadas) > 0 else 0 %}
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.775rem; color: var(--text-muted);">0%</span>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 0.875rem; color: var(--primary);">{{ porcentaje|int }}%</span>
+            <span style="font-size: 0.775rem; color: var(--text-muted);">100%</span>
+        </div>
+        <div style="background: var(--bg-page); border-radius: 20px; height: 12px; overflow: hidden; border: 1px solid var(--border);">
+            <div style="
+                height: 100%;
+                width: {{ porcentaje|int }}%;
+                background: var(--primary);
+                border-radius: 20px;
+                transition: width 1s ease;
+            "></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.25rem; text-align: center;">
+            <div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Disponibles</div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--text-secondary); font-size: 1.125rem;">{{ disponibles }}</div>
+            </div>
+            <div>
+                <div style="font-size: 0.72rem; color: var(--warning); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Pendientes</div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--warning); font-size: 1.125rem;">{{ repartidas }}</div>
+            </div>
+            <div>
+                <div style="font-size: 0.72rem; color: var(--success); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Cobradas</div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; color: var(--success); font-size: 1.125rem;">{{ pagadas }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}Reparto — SchoolPulse{% endblock %}
+{% block page_title %}Reparto de Pulseras{% endblock %}
+
+{% block contenido %}
+
+<!-- STATS -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ total_alumnos }}</div>
+            <div class="stat-label">Alumnos con pulseras</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
+            <i class="bi bi-tag-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ total_pulseras }}</div>
+            <div class="stat-label">Pulseras repartidas</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ disponibles }}</div>
+            <div class="stat-label">Pulseras disponibles</div>
+        </div>
+    </div>
+</div>
+
+<!-- TABLA -->
+<div class="card-sp">
+    <div class="card-sp-header">
+        <span class="card-sp-title">
+            <i class="bi bi-people-fill me-2" style="color: var(--primary);"></i>
+            Listado de Repartos
+        </span>
+        <a href="{{ url_for('reparto.asignar') }}" class="btn-sp-primary">
+            <i class="bi bi-plus-lg"></i>
+            Asignar Pulseras
+        </a>
+    </div>
+
+    <div class="card-sp-body" style="padding: 0;">
+        {% if repartos %}
+        <div style="overflow-x: auto;">
+            <table class="table-sp">
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Curso</th>
+                        <th>Pulseras asignadas</th>
+                        <th>Fecha reparto</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in repartos %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="
+                                    width: 34px; height: 34px;
+                                    border-radius: 50%;
+                                    background: var(--primary-light);
+                                    color: var(--primary);
+                                    display: flex; align-items: center; justify-content: center;
+                                    font-size: 0.72rem; font-weight: 700;
+                                    flex-shrink: 0;
+                                ">
+                                    {{ r.nombre[0] }}{{ r.apellido[0] }}
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 0.875rem;">{{ r.nombre }} {{ r.apellido }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-sp badge-repartida">{{ r.curso }}</span>
+                        </td>
+                        <td>
+                            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                                {% for p in r.pulseras %}
+                                <span style="
+                                    background: var(--primary-light);
+                                    color: var(--primary);
+                                    border: 1px solid rgba(79,70,229,0.2);
+                                    padding: 2px 8px;
+                                    border-radius: 6px;
+                                    font-size: 0.72rem;
+                                    font-weight: 700;
+                                ">#{{ p }}</span>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.775rem;">
+                            {{ r.fecha_reparto.strftime('%d/%m/%Y %H:%M') if r.fecha_reparto else '—' }}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 6px;">
+                                <a href="{{ url_for('cobro.detalle', alumno_id=r.alumno_id) }}"
+                                   class="btn-sp-primary"
+                                   style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
+                                    <i class="bi bi-cash"></i>
+                                    Cobrar
+                                </a>
+                                <button type="button"
+                                        class="btn-sp-danger"
+                                        style="font-size: 0.75rem; padding: 0.4rem 0.875rem;"
+                                        onclick="abrirModal('{{ r.alumno_id }}', '{{ r.nombre }} {{ r.apellido }}', '{{ r.curso }}', {{ r.pulseras }})">
+                                    <i class="bi bi-trash3-fill"></i>
+                                    Eliminar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-people"></i>
+            <p>Todavía no se repartieron pulseras.</p>
+            <a href="{{ url_for('reparto.asignar') }}" class="btn-sp-primary">
+                <i class="bi bi-plus-lg"></i>
+                Asignar primeras pulseras
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- MODAL CONFIRMAR ELIMINAR -->
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        ">
+            <div style="padding: 1.5rem 1.5rem 0; display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="
+                    width: 48px; height: 48px;
+                    border-radius: 12px;
+                    background: var(--danger-light);
+                    display: flex; align-items: center; justify-content: center;
+                    flex-shrink: 0;
+                ">
+                    <i class="bi bi-trash3-fill" style="color: var(--danger); font-size: 1.25rem;"></i>
+                </div>
+                <div>
+                    <h5 style="
+                        font-family: 'Syne', sans-serif;
+                        font-weight: 800; font-size: 1rem;
+                        color: var(--text-primary); margin-bottom: 4px;
+                    ">Eliminar asignación</h5>
+                    <p style="font-size: 0.8375rem; color: var(--text-muted); margin: 0;">
+                        Esta acción no se puede deshacer.
+                    </p>
+                </div>
+            </div>
+
+            <div style="padding: 1.25rem 1.5rem;">
+                <div style="
+                    background: var(--bg-page);
+                    border: 1px solid var(--border);
+                    border-radius: 12px;
+                    padding: 1rem 1.125rem;
+                    margin-bottom: 1rem;
+                ">
+                    <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">
+                        Alumno a eliminar
+                    </div>
+                    <div id="modal-alumno-nombre" style="font-weight: 700; font-size: 0.9375rem; color: var(--text-primary);"></div>
+                    <div id="modal-alumno-curso" style="font-size: 0.775rem; color: var(--text-muted); margin-top: 2px;"></div>
+                    <div id="modal-alumno-pulseras" style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                </div>
+
+                <div style="
+                    background: var(--danger-light);
+                    border: 1px solid rgba(220,38,38,0.15);
+                    border-radius: 10px;
+                    padding: 0.75rem 1rem;
+                    display: flex; align-items: center; gap: 8px;
+                    font-size: 0.8rem; color: var(--danger);
+                ">
+                    <i class="bi bi-exclamation-triangle-fill" style="flex-shrink: 0;"></i>
+                    Las pulseras volverán a quedar <strong style="margin: 0 3px;">disponibles</strong> para ser asignadas.
+                </div>
+            </div>
+
+            <div style="padding: 0 1.5rem 1.5rem; display: flex; gap: 0.75rem;">
+                <button type="button" class="btn-sp-secondary"
+                        style="flex: 1; justify-content: center;"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <form id="form-eliminar" method="POST">
+                    <button type="submit" class="btn-sp-danger" style="padding: 0.575rem 1.5rem;">
+                        <i class="bi bi-trash3-fill"></i>
+                        Sí, eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function abrirModal(alumnoId, nombre, curso, pulseras) {
+        document.getElementById('modal-alumno-nombre').textContent = nombre;
+        document.getElementById('modal-alumno-curso').textContent = 'Curso: ' + curso;
+        document.getElementById('form-eliminar').action = '/reparto/eliminar/' + alumnoId;
+
+        const contenedor = document.getElementById('modal-alumno-pulseras');
+        contenedor.innerHTML = '';
+        pulseras.forEach(p => {
+            const span = document.createElement('span');
+            span.textContent = '#' + p;
+            span.style.cssText = `
+                background: var(--primary-light);
+                color: var(--primary);
+                border: 1px solid rgba(79,70,229,0.2);
+                padding: 2px 8px;
+                border-radius: 6px;
+                font-size: 0.72rem;
+                font-weight: 700;
+            `;
+            contenedor.appendChild(span);
+        });
+
+        new bootstrap.Modal(document.getElementById('modalEliminar')).show();
+    }
+</script>
+{% endblock %}

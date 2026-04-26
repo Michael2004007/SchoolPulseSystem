@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}Asignar Pulseras — SchoolPulse{% endblock %}
+{% block page_title %}Asignar Pulseras{% endblock %}
+
+{% block contenido %}
+<div style="max-width: 560px; margin: 0 auto;">
+
+    <div style="margin-bottom: 1.75rem;">
+        <a href="{{ url_for('reparto.index') }}" style="
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.8rem; font-weight: 500; margin-bottom: 1rem;
+            transition: color 0.18s;
+        " onmouseover="this.style.color='var(--primary)'"
+           onmouseout="this.style.color='var(--text-muted)'">
+            <i class="bi bi-arrow-left"></i>
+            Volver a reparto
+        </a>
+        <h2 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.375rem;">
+            Asignar pulseras a alumno
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.8375rem;">
+            Ingresá los datos del alumno y el rango de pulseras que se le entregan.
+        </p>
+    </div>
+
+    <div class="card-sp">
+        <div class="card-sp-body">
+            <form method="POST" action="{{ url_for('reparto.asignar') }}" id="form-asignar">
+
+                <div style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);">
+                    <i class="bi bi-person-fill me-1"></i> Datos del alumno
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-sp-group">
+                        <label class="form-sp-label">Nombre</label>
+                        <input type="text" name="nombre" id="campo-nombre" class="form-sp-control"
+                               placeholder="Ej: Juan" required
+                               value="{{ form_data.nombre if form_data else '' }}">
+                    </div>
+                    <div class="form-sp-group">
+                        <label class="form-sp-label">Apellido</label>
+                        <input type="text" name="apellido" id="campo-apellido" class="form-sp-control"
+                               placeholder="Ej: Pérez" required
+                               value="{{ form_data.apellido if form_data else '' }}">
+                    </div>
+                </div>
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Curso</label>
+                    <input type="text" name="curso" id="campo-curso" class="form-sp-control"
+                           placeholder="Ej: 3 A"
+                           required
+                           value="{{ form_data.curso if form_data else '' }}"
+                           oninput="this.value = this.value.toUpperCase().replace(/\s+/g, ' ')">
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Se convierte automáticamente a mayúsculas. Ej: "3 a" → "3 A"
+                    </div>
+                </div>
+
+                <div style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin: 1.25rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);">
+                    <i class="bi bi-tag-fill me-1"></i> Rango de pulseras
+                </div>
+
+                <div style="background: var(--success-light); border: 1px solid rgba(5,150,105,0.2); border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--success);">
+                    <i class="bi bi-info-circle-fill"></i>
+                    Pulseras disponibles: <strong>{{ disponibles }}</strong>
+                    — Próxima disponible: <strong>#{{ proxima }}</strong>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                    <div class="form-sp-group" style="margin-bottom: 0;">
+                        <label class="form-sp-label"><i class="bi bi-hash me-1"></i>Desde</label>
+                        <input type="number" name="pulsera_desde" id="campo-desde"
+                               class="form-sp-control" placeholder="Ej: 1"
+                               min="1" required
+                               style="font-size: 1rem; font-weight: 700; text-align: center;"
+                               value="{{ form_data.pulsera_desde if form_data else '' }}">
+                    </div>
+                    <div class="form-sp-group" style="margin-bottom: 0;">
+                        <label class="form-sp-label"><i class="bi bi-hash me-1"></i>Hasta</label>
+                        <input type="number" name="pulsera_hasta" id="campo-hasta"
+                               class="form-sp-control" placeholder="Ej: 10"
+                               min="1" required
+                               style="font-size: 1rem; font-weight: 700; text-align: center;"
+                               value="{{ form_data.pulsera_hasta if form_data else '' }}">
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-page); border: 1px solid var(--border); border-radius: 10px; padding: 0.875rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Pulseras a asignar:</span>
+                    <span id="preview" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.125rem; color: var(--primary);">—</span>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem;">
+                    <a href="{{ url_for('reparto.index') }}" class="btn-sp-secondary" style="flex: 1; justify-content: center;">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn-sp-primary" style="flex: 2; justify-content: center;">
+                        <i class="bi bi-check-lg"></i>
+                        Asignar pulseras
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL RANGO OCUPADO -->
+<div class="modal fade" id="modalRangoOcupado" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        ">
+            <div style="padding: 1.5rem 1.5rem 0; display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="
+                    width: 48px; height: 48px; border-radius: 12px;
+                    background: var(--danger-light);
+                    display: flex; align-items: center; justify-content: center;
+                    flex-shrink: 0;
+                ">
+                    <i class="bi bi-exclamation-triangle-fill" style="color: var(--danger); font-size: 1.25rem;"></i>
+                </div>
+                <div>
+                    <h5 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px;">
+                        Rango no disponible
+                    </h5>
+                    <p style="font-size: 0.8375rem; color: var(--text-muted); margin: 0;">
+                        Las pulseras ingresadas ya están asignadas a otro alumno.
+                    </p>
+                </div>
+            </div>
+
+            <div style="padding: 1.25rem 1.5rem;">
+                <div style="background: var(--bg-page); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.125rem; margin-bottom: 1rem;">
+                    <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">
+                        Rango ingresado
+                    </div>
+                    <div id="modal-rango-texto" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.125rem; color: var(--danger);"></div>
+                </div>
+
+                <div style="background: var(--success-light); border: 1px solid rgba(5,150,105,0.2); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--success); display: flex; align-items: center; gap: 8px;">
+                    <i class="bi bi-info-circle-fill" style="flex-shrink: 0;"></i>
+                    Próxima pulsera disponible: <strong style="margin-left: 4px;">#{{ proxima }}</strong>
+                </div>
+            </div>
+
+            <div style="padding: 0 1.5rem 1.5rem; display: flex; gap: 0.75rem;">
+                <a href="{{ url_for('reparto.index') }}" class="btn-sp-secondary" style="flex: 1; justify-content: center;">
+                    <i class="bi bi-x-lg"></i>
+                    Salir
+                </a>
+                <button type="button" class="btn-sp-primary" style="flex: 2; justify-content: center;"
+                        onclick="cambiarRango()">
+                    <i class="bi bi-arrow-repeat"></i>
+                    Cambiar rango
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const desde = document.getElementById('campo-desde');
+    const hasta = document.getElementById('campo-hasta');
+    const preview = document.getElementById('preview');
+    const campoCurso = document.getElementById('campo-curso');
+
+    // Normalizar curso al perder el foco — elimina espacios dobles y convierte a mayúsculas
+    campoCurso.addEventListener('blur', function() {
+        this.value = this.value.toUpperCase().replace(/\s+/g, ' ').trim();
+    });
+
+    function actualizarPreview() {
+        const d = parseInt(desde.value);
+        const h = parseInt(hasta.value);
+        if (!isNaN(d) && !isNaN(h) && h >= d) {
+            preview.textContent = (h - d + 1) + ' pulseras';
+            preview.style.color = 'var(--primary)';
+        } else {
+            preview.textContent = '—';
+            preview.style.color = 'var(--text-muted)';
+        }
+    }
+
+    desde.addEventListener('input', actualizarPreview);
+    hasta.addEventListener('input', actualizarPreview);
+    actualizarPreview();
+
+    {% if error_rango %}
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('modal-rango-texto').textContent =
+            'Del #{{ form_data.pulsera_desde }} al #{{ form_data.pulsera_hasta }}';
+        new bootstrap.Modal(document.getElementById('modalRangoOcupado')).show();
+    });
+    {% endif %}
+
+    function cambiarRango() {
+        document.getElementById('campo-desde').value = '';
+        document.getElementById('campo-hasta').value = '';
+        preview.textContent = '—';
+        preview.style.color = 'var(--text-muted)';
+        bootstrap.Modal.getInstance(document.getElementById('modalRangoOcupado')).hide();
+        document.getElementById('campo-desde').focus();
+    }
+</script>
+{% endblock %}

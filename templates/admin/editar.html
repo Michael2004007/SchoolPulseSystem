@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Usuario — SchoolPulse{% endblock %}
+{% block page_title %}Editar Usuario{% endblock %}
+
+{% block contenido %}
+<div style="max-width: 480px; margin: 0 auto;">
+
+    <div style="margin-bottom: 1.75rem;">
+        <a href="{{ url_for('admin.index') }}" style="
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.8rem; font-weight: 500; transition: color 0.18s;
+        " onmouseover="this.style.color='var(--primary)'"
+           onmouseout="this.style.color='var(--text-muted)'">
+            <i class="bi bi-arrow-left"></i>
+            Volver a usuarios
+        </a>
+    </div>
+
+    <div class="card-sp">
+        <div class="card-sp-header">
+            <span class="card-sp-title">
+                <i class="bi bi-pencil-fill me-2" style="color: var(--primary);"></i>
+                Editar usuario
+            </span>
+        </div>
+        <div class="card-sp-body">
+            <form method="POST" action="{{ url_for('admin.editar', usuario_id=usuario.id) }}">
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Nombre completo</label>
+                    <input type="text" name="nombre" class="form-sp-control"
+                           value="{{ usuario.nombre }}" required>
+                </div>
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Usuario</label>
+                    <input type="text" name="username" class="form-sp-control"
+                           value="{{ usuario.username }}" required>
+                </div>
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Nueva contraseña</label>
+                    <input type="password" name="password" class="form-sp-control"
+                           placeholder="Dejá vacío para no cambiar">
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Si dejás vacío, la contraseña no cambia.
+                    </div>
+                </div>
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Rol y acceso</label>
+                    <select name="rol" class="form-sp-control">
+                        <option value="cobrador" {% if usuario.rol =='cobrador' %}selected{% endif %}>
+                            Cobrador — Reparto y Cobro
+                        </option>
+                        <option value="porton" {% if usuario.rol =='porton' %}selected{% endif %}>
+                            Portón — Solo pantalla de portón
+                        </option>
+                        <option value="reportes" {% if usuario.rol =='reportes' %}selected{% endif %}>
+                            Reportes — Solo visualización
+                        </option>
+                        <option value="admin" {% if usuario.rol =='admin' %}selected{% endif %}>
+                            Admin — Acceso total
+                        </option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem;">
+                    <a href="{{ url_for('admin.index') }}" class="btn-sp-secondary"
+                       style="flex: 1; justify-content: center;">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn-sp-primary"
+                            style="flex: 2; justify-content: center;">
+                        <i class="bi bi-check-lg"></i>
+                        Guardar cambios
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

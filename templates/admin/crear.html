@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo Usuario — SchoolPulse{% endblock %}
+{% block page_title %}Nuevo Usuario{% endblock %}
+
+{% block contenido %}
+<div style="max-width: 480px; margin: 0 auto;">
+
+    <div style="margin-bottom: 1.75rem;">
+        <a href="{{ url_for('admin.index') }}" style="
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.8rem; font-weight: 500; transition: color 0.18s;
+        " onmouseover="this.style.color='var(--primary)'"
+           onmouseout="this.style.color='var(--text-muted)'">
+            <i class="bi bi-arrow-left"></i>
+            Volver a usuarios
+        </a>
+    </div>
+
+    <div class="card-sp">
+        <div class="card-sp-header">
+            <span class="card-sp-title">
+                <i class="bi bi-person-plus-fill me-2" style="color: var(--primary);"></i>
+                Crear nuevo usuario
+            </span>
+        </div>
+        <div class="card-sp-body">
+            <form method="POST" action="{{ url_for('admin.crear') }}">
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Nombre completo</label>
+                    <input type="text" name="nombre" class="form-sp-control"
+                           placeholder="Ej: Juan Pérez" required>
+                </div>
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Usuario</label>
+                    <input type="text" name="username" class="form-sp-control"
+                           placeholder="Ej: jperez" required>
+                </div>
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Contraseña</label>
+                    <input type="password" name="password" class="form-sp-control"
+                           placeholder="Contraseña" required>
+                </div>
+
+                <div class="form-sp-group">
+                    <label class="form-sp-label">Rol y acceso</label>
+                    <select name="rol" class="form-sp-control">
+                        <option value="cobrador">Cobrador — Reparto y Cobro</option>
+                        <option value="porton">Portón — Solo pantalla de portón</option>
+                        <option value="reportes">Reportes — Solo visualización</option>
+                        <option value="admin">Admin — Acceso total</option>
+                    </select>
+                </div>
+
+                <div style="
+                    background: var(--primary-light);
+                    border: 1px solid rgba(79,70,229,0.2);
+                    border-radius: 10px;
+                    padding: 0.875rem 1rem;
+                    font-size: 0.8rem;
+                    color: var(--primary);
+                    margin-bottom: 1.5rem;
+                    display: flex; gap: 8px; align-items: flex-start;
+                ">
+                    <i class="bi bi-info-circle-fill" style="flex-shrink: 0; margin-top: 2px;"></i>
+                    <div>
+                        <strong>Cobrador:</strong> Reparto y Cobro<br>
+                        <strong>Portón:</strong> Solo verificación de pulseras<br>
+                        <strong>Reportes:</strong> Solo visualización de reportes<br>
+                        <strong>Admin:</strong> Acceso completo al sistema
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem;">
+                    <a href="{{ url_for('admin.index') }}" class="btn-sp-secondary"
+                       style="flex: 1; justify-content: center;">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn-sp-primary"
+                            style="flex: 2; justify-content: center;">
+                        <i class="bi bi-check-lg"></i>
+                        Crear usuario
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

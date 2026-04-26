@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Usuarios — SchoolPulse{% endblock %}
+{% block page_title %}Gestión de Usuarios{% endblock %}
+
+{% block contenido %}
+
+<!-- LOGO DEL COLEGIO -->
+<div class="card-sp" style="margin-bottom: 1.5rem;">
+    <div class="card-sp-header">
+        <span class="card-sp-title">
+            <i class="bi bi-image-fill me-2" style="color: var(--primary);"></i>
+            Logo del colegio
+        </span>
+    </div>
+    <div class="card-sp-body">
+        <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+
+            <!-- PREVIEW -->
+            <div style="
+                width: 90px; height: 90px;
+                border-radius: 50%;
+                background: var(--primary-light);
+                border: 3px solid var(--primary);
+                display: flex; align-items: center; justify-content: center;
+                overflow: hidden; flex-shrink: 0;
+                box-shadow: 0 4px 16px rgba(79,70,229,0.15);
+            ">
+                {% if logo_existe %}
+                <img src="{{ url_for('static', filename='uploads/logo_colegio.' + logo_ext) }}"
+                     style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                <i class="bi bi-award-fill" style="font-size: 2.5rem; color: var(--primary);"></i>
+                {% endif %}
+            </div>
+
+            <div>
+                <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 4px;">
+                    {% if logo_existe %}
+                        Logo actual cargado
+                    {% else %}
+                        No hay logo cargado todavía
+                    {% endif %}
+                </div>
+                <div style="font-size: 0.775rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Formatos permitidos: PNG, JPG, JPEG, WEBP. Se mostrará en la pantalla de inicio.
+                </div>
+
+                <form method="POST" action="{{ url_for('admin.subir_logo') }}"
+                      enctype="multipart/form-data">
+                    <label style="
+                        display: inline-flex; align-items: center; gap: 6px;
+                        background: var(--primary);
+                        border: none;
+                        border-radius: 10px;
+                        padding: 0.575rem 1.125rem;
+                        font-size: 0.8125rem;
+                        font-weight: 600;
+                        color: white;
+                        cursor: pointer;
+                        transition: all 0.18s;
+                        box-shadow: 0 2px 8px rgba(79,70,229,0.25);
+                    " onmouseover="this.style.background='var(--primary-hover)'"
+                       onmouseout="this.style.background='var(--primary)'">
+                        <i class="bi bi-camera-fill"></i>
+                        {{ 'Cambiar logo' if logo_existe else 'Subir logo' }}
+                        <input type="file" name="logo" accept=".png,.jpg,.jpeg,.webp"
+                               style="display: none;"
+                               onchange="this.closest('form').submit()">
+                    </label>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- USUARIOS -->
+<div class="card-sp">
+    <div class="card-sp-header">
+        <span class="card-sp-title">
+            <i class="bi bi-shield-fill me-2" style="color: var(--primary);"></i>
+            Usuarios del sistema
+        </span>
+        <a href="{{ url_for('admin.crear') }}" class="btn-sp-primary">
+            <i class="bi bi-plus-lg"></i>
+            Nuevo usuario
+        </a>
+    </div>
+    <div class="card-sp-body" style="padding: 0;">
+        {% if usuarios %}
+        <table class="table-sp">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Acceso a módulos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="
+                                width: 34px; height: 34px; border-radius: 50%;
+                                background: var(--primary-light); color: var(--primary);
+                                display: flex; align-items: center; justify-content: center;
+                                font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+                            ">{{ u.nombre[0] if u.nombre else u.username[0] }}</div>
+                            <span style="font-weight: 600;">{{ u.nombre or u.username }}</span>
+                        </div>
+                    </td>
+                    <td style="color: var(--text-muted);">{{ u.username }}</td>
+                    <td>
+                        {% if u.rol == 'admin' %}
+                            <span class="badge-sp badge-pagada"><i class="bi bi-shield-fill"></i> Admin</span>
+                        {% elif u.rol == 'cobrador' %}
+                            <span class="badge-sp badge-repartida"><i class="bi bi-cash"></i> Cobrador</span>
+                        {% elif u.rol == 'porton' %}
+                            <span class="badge-sp badge-disponible"><i class="bi bi-door-open-fill"></i> Portón</span>
+                        {% elif u.rol == 'reportes' %}
+                            <span class="badge-sp" style="background: var(--primary-light); color: var(--primary); border: 1px solid rgba(79,70,249,0.2);">
+                                <i class="bi bi-bar-chart-fill"></i> Reportes
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td style="font-size: 0.775rem; color: var(--text-muted);">
+                        {% if u.rol == 'admin' %}
+                            Todo el sistema
+                        {% elif u.rol == 'cobrador' %}
+                            Reparto, Cobro
+                        {% elif u.rol == 'porton' %}
+                            Solo Portón
+                        {% elif u.rol == 'reportes' %}
+                            Solo Reportes
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 6px;">
+                            <a href="{{ url_for('admin.editar', usuario_id=u.id) }}"
+                               class="btn-sp-warning" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
+                                <i class="bi bi-pencil-fill"></i>
+                                Editar
+                            </a>
+                            {% if u.id != current_user.id %}
+                            <form method="POST" action="{{ url_for('admin.eliminar', usuario_id=u.id) }}"
+                                  onsubmit="return confirm('¿Seguro que querés eliminar a {{ u.nombre }}?')">
+                                <button type="submit" class="btn-sp-danger"
+                                        style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
+                                    <i class="bi bi-trash3-fill"></i>
+                                    Eliminar
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-people"></i>
+            <p>No hay usuarios registrados.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

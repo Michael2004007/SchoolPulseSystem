@@ -1,0 +1,6 @@
+flask
+flask-login
+mysql-connector-python
+reportlab
+werkzeug
+gunicorn

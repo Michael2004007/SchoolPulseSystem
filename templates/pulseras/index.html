@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Pulseras — SchoolPulse{% endblock %}
+{% block page_title %}Gestión de Pulseras{% endblock %}
+
+{% block contenido %}
+
+<!-- STATS -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem;">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
+            <i class="bi bi-tag-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ total }}</div>
+            <div class="stat-label">Total pulseras</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--bg-hover); color: var(--text-muted);">
+            <i class="bi bi-circle"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ disponibles }}</div>
+            <div class="stat-label">Disponibles</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
+            <i class="bi bi-person-check-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ repartidas }}</div>
+            <div class="stat-label">Repartidas</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <div>
+            <div class="stat-value">{{ pagadas }}</div>
+            <div class="stat-label">Pagadas</div>
+        </div>
+    </div>
+</div>
+
+<!-- TABLA -->
+<div class="card-sp">
+    <div class="card-sp-header">
+        <span class="card-sp-title">
+            <i class="bi bi-tag-fill me-2" style="color: var(--primary);"></i>
+            Listado de Pulseras
+        </span>
+        <a href="{{ url_for('pulseras.cargar') }}" class="btn-sp-primary">
+            <i class="bi bi-plus-lg"></i>
+            Cargar Pulseras
+        </a>
+    </div>
+
+    <div class="card-sp-body" style="padding: 0;">
+        {% if pulseras %}
+        <div style="overflow-x: auto;">
+            <table class="table-sp">
+                <thead>
+                    <tr>
+                        <th># Pulsera</th>
+                        <th>Estado</th>
+                        <th>Alumno</th>
+                        <th>Curso</th>
+                        <th>Fecha creación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pulseras %}
+                    <tr>
+                        <td>
+                            <span style="
+                                font-family: 'Syne', sans-serif;
+                                font-weight: 800;
+                                font-size: 0.9rem;
+                                color: var(--primary);
+                            ">#{{ p.id }}</span>
+                        </td>
+                        <td>
+                            {% if p.estado == 'disponible' %}
+                                <span class="badge-sp badge-disponible">
+                                    <i class="bi bi-circle"></i> Disponible
+                                </span>
+                            {% elif p.estado == 'repartida' %}
+                                <span class="badge-sp badge-repartida">
+                                    <i class="bi bi-person-check-fill"></i> Repartida
+                                </span>
+                            {% else %}
+                                <span class="badge-sp badge-pagada">
+                                    <i class="bi bi-check-circle-fill"></i> Pagada
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td style="color: var(--text-secondary);">
+                            {{ p.alumno if p.alumno else '—' }}
+                        </td>
+                        <td style="color: var(--text-secondary);">
+                            {{ p.curso if p.curso else '—' }}
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.775rem;">
+                            {{ p.fecha_creacion.strftime('%d/%m/%Y') if p.fecha_creacion else '—' }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-tag"></i>
+            <p>No hay pulseras cargadas todavía.</p>
+            <a href="{{ url_for('pulseras.cargar') }}" class="btn-sp-primary">
+                <i class="bi bi-plus-lg"></i>
+                Cargar primer rango
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Deudores — SchoolPulse{% endblock %}
+{% block page_title %}Reporte de Deudores{% endblock %}
+
+{% block contenido %}
+
+<div style="margin-bottom: 1.5rem;">
+    <a href="{{ url_for('reportes.index') }}" style="
+        display: inline-flex; align-items: center; gap: 6px;
+        color: var(--text-muted); text-decoration: none;
+        font-size: 0.8rem; font-weight: 500; transition: color 0.18s;
+    " onmouseover="this.style.color='var(--primary)'"
+       onmouseout="this.style.color='var(--text-muted)'">
+        <i class="bi bi-arrow-left"></i>
+        Volver a reportes
+    </a>
+</div>
+
+<div class="card-sp">
+    <div class="card-sp-header">
+        <span class="card-sp-title">
+            <i class="bi bi-clock-fill me-2" style="color: var(--warning);"></i>
+            Alumnos con pulseras pendientes
+        </span>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">{{ deudores|length }} alumnos</span>
+    </div>
+    <div class="card-sp-body" style="padding: 0;">
+        {% if deudores %}
+        <div style="overflow-x: auto;">
+            <table class="table-sp">
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Curso</th>
+                        <th># Pulsera</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in deudores %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--warning-light); color: var(--warning); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0;">
+                                    {{ d[1][0] }}{{ d[2][0] }}
+                                </div>
+                                <span style="font-weight: 600;">{{ d[1] }} {{ d[2] }}</span>
+                            </div>
+                        </td>
+                        <td><span class="badge-sp badge-repartida">{{ d[3] }}</span></td>
+                        <td>
+                            <span style="font-family: 'Syne', sans-serif; font-weight: 800; color: var(--warning);">#{{ d[0] }}</span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('cobro.detalle', alumno_id=d[4]) }}" class="btn-sp-primary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
+                                <i class="bi bi-cash"></i>
+                                Cobrar
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-check-circle"></i>
+            <p>No hay deudores. ¡Todos pagaron!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

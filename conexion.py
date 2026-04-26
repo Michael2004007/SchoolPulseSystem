@@ -1,13 +1,14 @@
+import os
 import mysql.connector
 from mysql.connector import Error
 
 
 class Conexion:
-    HOST = "localhost"
-    DATABASE = "schoolpulsesystem"
-    USER = "root"
-    PASSWORD = "Oscar2025-"
-    DB_PORT = "3306"
+    HOST = os.environ.get('MYSQL_HOST', 'localhost')
+    DATABASE = os.environ.get('MYSQL_DATABASE', 'schoolpulsesystem')
+    USER = os.environ.get('MYSQL_USER', 'root')
+    PASSWORD = os.environ.get('MYSQL_PASSWORD', 'Oscar2025-')
+    DB_PORT = int(os.environ.get('MYSQL_PORT', '3306'))
     POOL_SIZE = 5
     POOL_NAME = "school_pulse_pool"
     _pool = None

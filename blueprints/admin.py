@@ -1,10 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 from flask_login import login_required, current_user
 from functools import wraps
 from DAO.usuarioDAO import UsuarioDAO
 from entidades.Usuarios import Usuario
-from werkzeug.utils import secure_filename
-import os
+from conexion import Conexion
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -26,15 +25,21 @@ def solo_admin(f):
 
 
 def get_logo_info():
-    logo_existe = False
-    logo_ext = 'png'
-    upload_path = os.path.join(current_app.root_path, 'static', 'uploads')
-    for ext in ['png', 'jpg', 'jpeg', 'webp']:
-        if os.path.exists(os.path.join(upload_path, f'logo_colegio.{ext}')):
-            logo_existe = True
-            logo_ext = ext
-            break
-    return logo_existe, logo_ext
+    conexion = None
+    try:
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+        cursor.execute('SELECT logo_ext FROM usuario WHERE logo IS NOT NULL LIMIT 1')
+        row = cursor.fetchone()
+        if row and row[0]:
+            return True, row[0]
+        return False, 'png'
+    except:
+        return False, 'png'
+    finally:
+        if conexion:
+            cursor.close()
+            Conexion.liberar_conexion(conexion)
 
 
 @admin_bp.route('/')
@@ -47,6 +52,25 @@ def index():
                            usuarios=usuarios,
                            logo_existe=logo_existe,
                            logo_ext=logo_ext)
+
+
+@admin_bp.route('/logo')
+def logo():
+    conexion = None
+    try:
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+        cursor.execute('SELECT logo, logo_ext FROM usuario WHERE logo IS NOT NULL LIMIT 1')
+        row = cursor.fetchone()
+        if row and row[0]:
+            return Response(row[0], mimetype=f'image/{row[1]}')
+        return '', 404
+    except:
+        return '', 404
+    finally:
+        if conexion:
+            cursor.close()
+            Conexion.liberar_conexion(conexion)
 
 
 @admin_bp.route('/crear', methods=['GET', 'POST'])
@@ -117,17 +141,29 @@ def subir_logo():
 
     if file and allowed_file(file.filename):
         ext = file.filename.rsplit('.', 1)[1].lower()
-        filename = f'logo_colegio.{ext}'
-        upload_path = os.path.join(current_app.root_path, 'static', 'uploads')
-        os.makedirs(upload_path, exist_ok=True)
-
-        for e in ALLOWED_EXTENSIONS:
-            old = os.path.join(upload_path, f'logo_colegio.{e}')
-            if os.path.exists(old):
-                os.remove(old)
-
-        file.save(os.path.join(upload_path, filename))
-        flash('✅ Logo actualizado correctamente.', 'success')
+        logo_data = file.read()
+        conexion = None
+        try:
+            conexion = Conexion.obtener_conexion()
+            cursor = conexion.cursor()
+            cursor.execute(
+                'UPDATE usuario SET logo = %s, logo_ext = %s WHERE id = %s',
+                (logo_data, ext, current_user.id)
+            )
+            if cursor.rowcount == 0:
+                cursor.execute(
+                    'UPDATE usuario SET logo = %s, logo_ext = %s WHERE rol = "admin" LIMIT 1',
+                    (logo_data, ext)
+                )
+            conexion.commit()
+            flash('✅ Logo actualizado correctamente.', 'success')
+        except Exception as e:
+            print(f'Error al guardar logo: {e}')
+            flash('❌ Error al guardar el logo.', 'danger')
+        finally:
+            if conexion:
+                cursor.close()
+                Conexion.liberar_conexion(conexion)
     else:
         flash('❌ Formato no permitido. Solo PNG, JPG o WEBP.', 'danger')
 

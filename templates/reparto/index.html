@@ -303,7 +303,7 @@
 
         filas.forEach(fila => {
             const fn = normalizar(fila.dataset.nombre);
-            const fc = normalizer(fila.dataset.curso).replace(/\s+/g, ' ');
+            const fc = normalizar(fila.dataset.curso).replace(/\s+/g, ' ');
             const fp = fila.dataset.pulseras || '';
 
             const matchNombre = !nombre || fn.includes(nombre);

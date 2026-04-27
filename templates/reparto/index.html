@@ -1,289 +1,3 @@
-{% extends "base.html" %}
-
-{% block title %}Reparto — SchoolPulse{% endblock %}
-{% block page_title %}Reparto de Pulseras{% endblock %}
-
-{% block contenido %}
-
-<!-- STATS -->
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
-    <div class="stat-card" style="min-width: 0; overflow: hidden; padding: 0.75rem 0.5rem;">
-        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary); flex-shrink: 0; width: 32px; height: 32px; font-size: 0.875rem;">
-            <i class="bi bi-people-fill"></i>
-        </div>
-        <div style="min-width: 0;">
-            <div class="stat-value" style="font-size: 1.25rem;">{{ total_alumnos }}</div>
-            <div class="stat-label" style="font-size: 0.65rem; white-space: normal;">Alumnos</div>
-        </div>
-    </div>
-    <div class="stat-card" style="min-width: 0; overflow: hidden; padding: 0.75rem 0.5rem;">
-        <div class="stat-icon" style="background: var(--warning-light); color: var(--warning); flex-shrink: 0; width: 32px; height: 32px; font-size: 0.875rem;">
-            <i class="bi bi-tag-fill"></i>
-        </div>
-        <div style="min-width: 0;">
-            <div class="stat-value" style="font-size: 1.25rem;">{{ total_pulseras }}</div>
-            <div class="stat-label" style="font-size: 0.65rem; white-space: normal;">Repartidas</div>
-        </div>
-    </div>
-    <div class="stat-card" style="min-width: 0; overflow: hidden; padding: 0.75rem 0.5rem;">
-        <div class="stat-icon" style="background: var(--success-light); color: var(--success); flex-shrink: 0; width: 32px; height: 32px; font-size: 0.875rem;">
-            <i class="bi bi-check-circle-fill"></i>
-        </div>
-        <div style="min-width: 0;">
-            <div class="stat-value" style="font-size: 1.25rem;">{{ disponibles }}</div>
-            <div class="stat-label" style="font-size: 0.65rem; white-space: normal;">Disponibles</div>
-        </div>
-    </div>
-</div>
-
-<!-- LISTA -->
-<div class="card-sp" style="overflow: hidden;">
-    <div class="card-sp-header">
-        <span class="card-sp-title">
-            <i class="bi bi-people-fill me-2" style="color: var(--primary);"></i>
-            Listado de Repartos
-        </span>
-        <div style="display: flex; gap: 0.5rem;">
-            <a href="{{ url_for('reparto.descargar_modelo') }}" class="btn-sp-secondary" style="font-size: 0.775rem;">
-                <i class="bi bi-download"></i>
-                Modelo
-            </a>
-            <a href="{{ url_for('reparto.cargar_excel') }}" class="btn-sp-secondary" style="font-size: 0.775rem;">
-                <i class="bi bi-file-earmark-excel-fill"></i>
-                Cargar Excel
-            </a>
-            <a href="{{ url_for('reparto.asignar') }}" class="btn-sp-primary" style="font-size: 0.775rem;">
-                <i class="bi bi-plus-lg"></i>
-                Asignar
-            </a>
-        </div>
-    </div>
-
-    {% if repartos %}
-    <!-- BUSCADOR -->
-    <div style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem;">
-        <div style="position: relative; flex: 1;">
-            <i class="bi bi-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
-            <input type="text" id="filtro-nombre" placeholder="Buscar por nombre o apellido..."
-                   style="width: 100%; padding: 0.45rem 0.75rem 0.45rem 2rem;
-                          border: 1px solid var(--border); border-radius: 8px;
-                          background: var(--bg-page); color: var(--text-primary);
-                          font-size: 0.8rem; box-sizing: border-box;">
-        </div>
-        <div style="position: relative;">
-            <i class="bi bi-tag" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
-            <input type="number" id="filtro-pulsera" placeholder="Pulsera..."
-                   style="width: 110px; padding: 0.45rem 0.75rem 0.45rem 2rem;
-                          border: 1px solid var(--border); border-radius: 8px;
-                          background: var(--bg-page); color: var(--text-primary);
-                          font-size: 0.8rem;">
-        </div>
-        <div style="position: relative;">
-            <i class="bi bi-mortarboard" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
-            <input type="text" id="filtro-curso" placeholder="Curso..."
-                   style="width: 110px; padding: 0.45rem 0.75rem 0.45rem 2rem;
-                          border: 1px solid var(--border); border-radius: 8px;
-                          background: var(--bg-page); color: var(--text-primary);
-                          font-size: 0.8rem;">
-        </div>
-    </div>
-    {% endif %}
-
-    <div class="card-sp-body" style="padding: 0;">
-        {% if repartos %}
-
-        <!-- VISTA MÓVIL -->
-        <div class="d-block d-md-none">
-            {% for r in repartos %}
-            <div class="fila-alumno"
-                 data-nombre="{{ r.nombre }} {{ r.apellido }}"
-                 data-curso="{{ r.curso }}"
-                 data-pulseras="{{ r.pulseras | join(',') }}"
-                 style="padding: 1rem; border-bottom: 1px solid var(--border); width: 100%; box-sizing: border-box;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; overflow: hidden;">
-                    <div style="
-                        width: 36px; height: 36px; border-radius: 50%;
-                        background: var(--primary-light); color: var(--primary);
-                        display: flex; align-items: center; justify-content: center;
-                        font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
-                    ">{{ r.nombre[0] }}{{ r.apellido[0] }}</div>
-                    <div style="min-width: 0; flex: 1; overflow: hidden;">
-                        <div style="font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r.nombre }} {{ r.apellido }}</div>
-                        <span class="badge-sp badge-repartida" style="margin-top: 3px;">{{ r.curso }}</span>
-                    </div>
-                </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0.75rem;">
-                    {% if r.pulseras %}
-                        {% for p in r.pulseras %}
-                        <span style="background: var(--primary-light); color: var(--primary); border: 1px solid rgba(79,70,229,0.2); padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;">#{{ p }}</span>
-                        {% endfor %}
-                    {% else %}
-                        <span style="color: var(--text-muted); font-size: 0.775rem; font-style: italic;">Sin pulseras asignadas</span>
-                    {% endif %}
-                </div>
-                <div style="display: flex; gap: 6px;">
-                    <a href="{{ url_for('reparto.asignar_existente', alumno_id=r.alumno_id) }}"
-                       class="btn-sp-secondary" style="flex: 1; justify-content: center; font-size: 0.775rem;">
-                        <i class="bi bi-tag-fill"></i>
-                        Asignar
-                    </a>
-                    {% if r.pulseras %}
-                    <a href="{{ url_for('cobro.detalle', alumno_id=r.alumno_id) }}"
-                       class="btn-sp-primary" style="flex: 1; justify-content: center; font-size: 0.775rem;">
-                        <i class="bi bi-cash"></i>
-                        Cobrar
-                    </a>
-                    <button type="button" class="btn-sp-danger"
-                            style="flex: 1; justify-content: center; font-size: 0.775rem;"
-                            onclick="abrirModal('{{ r.alumno_id }}', '{{ r.nombre }} {{ r.apellido }}', '{{ r.curso }}', {{ r.pulseras }})">
-                        <i class="bi bi-trash3-fill"></i>
-                        Eliminar
-                    </button>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- VISTA ESCRITORIO -->
-        <div class="d-none d-md-block">
-            <div style="overflow-x: auto;">
-                <table class="table-sp">
-                    <thead>
-                        <tr>
-                            <th>Alumno</th>
-                            <th>Curso</th>
-                            <th>Pulseras asignadas</th>
-                            <th>Fecha reparto</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for r in repartos %}
-                        <tr class="fila-alumno"
-                            data-nombre="{{ r.nombre }} {{ r.apellido }}"
-                            data-curso="{{ r.curso }}"
-                            data-pulseras="{{ r.pulseras | join(',') }}">
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="
-                                        width: 34px; height: 34px; border-radius: 50%;
-                                        background: var(--primary-light); color: var(--primary);
-                                        display: flex; align-items: center; justify-content: center;
-                                        font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
-                                    ">{{ r.nombre[0] }}{{ r.apellido[0] }}</div>
-                                    <div style="font-weight: 600; font-size: 0.875rem;">{{ r.nombre }} {{ r.apellido }}</div>
-                                </div>
-                            </td>
-                            <td><span class="badge-sp badge-repartida">{{ r.curso }}</span></td>
-                            <td>
-                                {% if r.pulseras %}
-                                <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                                    {% for p in r.pulseras %}
-                                    <span style="background: var(--primary-light); color: var(--primary); border: 1px solid rgba(79,70,229,0.2); padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700;">#{{ p }}</span>
-                                    {% endfor %}
-                                </div>
-                                {% else %}
-                                <span style="color: var(--text-muted); font-size: 0.775rem; font-style: italic;">Sin pulseras</span>
-                                {% endif %}
-                            </td>
-                            <td style="color: var(--text-muted); font-size: 0.775rem;">
-                                {{ r.fecha_reparto.strftime('%d/%m/%Y %H:%M') if r.fecha_reparto else '—' }}
-                            </td>
-                            <td>
-                                <div style="display: flex; gap: 6px;">
-                                    <a href="{{ url_for('reparto.asignar_existente', alumno_id=r.alumno_id) }}"
-                                       class="btn-sp-secondary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
-                                        <i class="bi bi-tag-fill"></i>
-                                        Asignar
-                                    </a>
-                                    {% if r.pulseras %}
-                                    <a href="{{ url_for('cobro.detalle', alumno_id=r.alumno_id) }}"
-                                       class="btn-sp-primary" style="font-size: 0.75rem; padding: 0.4rem 0.875rem;">
-                                        <i class="bi bi-cash"></i>
-                                        Cobrar
-                                    </a>
-                                    <button type="button" class="btn-sp-danger"
-                                            style="font-size: 0.75rem; padding: 0.4rem 0.875rem;"
-                                            onclick="abrirModal('{{ r.alumno_id }}', '{{ r.nombre }} {{ r.apellido }}', '{{ r.curso }}', {{ r.pulseras }})">
-                                        <i class="bi bi-trash3-fill"></i>
-                                        Eliminar
-                                    </button>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div id="sin-resultados" style="display: none; padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.875rem;">
-                <i class="bi bi-search" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
-                No se encontraron alumnos con ese filtro.
-            </div>
-        </div>
-
-        {% else %}
-        <div class="empty-state">
-            <i class="bi bi-people"></i>
-            <p>Todavía no hay alumnos cargados.</p>
-            <a href="{{ url_for('reparto.descargar_modelo') }}" class="btn-sp-secondary" style="margin-bottom: 0.5rem;">
-                <i class="bi bi-download"></i>
-                Descargar modelo Excel
-            </a>
-            <a href="{{ url_for('reparto.cargar_excel') }}" class="btn-sp-secondary" style="margin-bottom: 0.5rem;">
-                <i class="bi bi-file-earmark-excel-fill"></i>
-                Cargar alumnos desde Excel
-            </a>
-            <a href="{{ url_for('reparto.asignar') }}" class="btn-sp-primary">
-                <i class="bi bi-plus-lg"></i>
-                Asignar primeras pulseras
-            </a>
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- MODAL CONFIRMAR ELIMINAR -->
-<div class="modal fade" id="modalEliminar" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden;">
-            <div style="padding: 1.5rem 1.5rem 0; display: flex; align-items: flex-start; gap: 1rem;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--danger-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i class="bi bi-trash3-fill" style="color: var(--danger); font-size: 1.25rem;"></i>
-                </div>
-                <div style="min-width: 0; overflow: hidden;">
-                    <h5 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px;">Eliminar asignación</h5>
-                    <p style="font-size: 0.8375rem; color: var(--text-muted); margin: 0;">Esta acción no se puede deshacer.</p>
-                </div>
-            </div>
-            <div style="padding: 1.25rem 1.5rem;">
-                <div style="background: var(--bg-page); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.125rem; margin-bottom: 1rem;">
-                    <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">Alumno a eliminar</div>
-                    <div id="modal-alumno-nombre" style="font-weight: 700; font-size: 0.9375rem; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></div>
-                    <div id="modal-alumno-curso" style="font-size: 0.775rem; color: var(--text-muted); margin-top: 2px;"></div>
-                    <div id="modal-alumno-pulseras" style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px;"></div>
-                </div>
-                <div style="background: var(--danger-light); border: 1px solid rgba(220,38,38,0.15); border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--danger);">
-                    <i class="bi bi-exclamation-triangle-fill" style="flex-shrink: 0;"></i>
-                    Las pulseras volverán a quedar disponibles para ser asignadas.
-                </div>
-            </div>
-            <div style="padding: 0 1.5rem 1.5rem; display: flex; gap: 0.75rem;">
-                <button type="button" class="btn-sp-secondary" style="flex: 1; justify-content: center;" data-bs-dismiss="modal">Cancelar</button>
-                <form id="form-eliminar" method="POST">
-                    <button type="submit" class="btn-sp-danger" style="padding: 0.575rem 1.5rem;">
-                        <i class="bi bi-trash3-fill"></i>
-                        Sí, eliminar
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
-
 {% block scripts %}
 <script>
     const filtroNombre = document.getElementById('filtro-nombre');
@@ -291,24 +5,35 @@
     const filtroPulsera = document.getElementById('filtro-pulsera');
 
     function normalizar(str) {
-        return str.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        return (str || '')
+            .trim()
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    // elimina TODOS los espacios para comparar tipo "3a" vs "3 a"
+    function limpiarClave(str) {
+        return normalizar(str).replace(/\s+/g, '');
     }
 
     function filtrar() {
-        const nombre = normalizar(filtroNombre?.value || '');
-        const curso = normalizar((filtroCurso?.value || '').replace(/\s+/g, ' '));
+        const nombre = limpiarClave(filtroNombre?.value || '');
+        const curso = limpiarClave(filtroCurso?.value || '');
         const pulsera = (filtroPulsera?.value || '').trim();
+
         const filas = document.querySelectorAll('.fila-alumno');
         let visibles = 0;
 
         filas.forEach(fila => {
-            const fn = normalizar(fila.dataset.nombre);
-            const fc = normalizar(fila.dataset.curso).replace(/\s+/g, ' ');
+            const fn = limpiarClave(fila.dataset.nombre);
+            const fc = limpiarClave(fila.dataset.curso);
             const fp = fila.dataset.pulseras || '';
 
             const matchNombre = !nombre || fn.includes(nombre);
             const matchCurso = !curso || fc.includes(curso);
             const matchPulsera = !pulsera || fp.split(',').includes(pulsera);
+
             const mostrar = matchNombre && matchCurso && matchPulsera;
 
             fila.style.display = mostrar ? '' : 'none';
@@ -316,7 +41,9 @@
         });
 
         const sinResultados = document.getElementById('sin-resultados');
-        if (sinResultados) sinResultados.style.display = visibles === 0 ? 'block' : 'none';
+        if (sinResultados) {
+            sinResultados.style.display = visibles === 0 ? 'block' : 'none';
+        }
     }
 
     filtroNombre?.addEventListener('input', filtrar);
@@ -330,14 +57,18 @@
 
         const contenedor = document.getElementById('modal-alumno-pulseras');
         contenedor.innerHTML = '';
+
         pulseras.forEach(p => {
             const span = document.createElement('span');
             span.textContent = '#' + p;
             span.style.cssText = `
-                background: var(--primary-light); color: var(--primary);
+                background: var(--primary-light);
+                color: var(--primary);
                 border: 1px solid rgba(79,70,229,0.2);
-                padding: 2px 8px; border-radius: 6px;
-                font-size: 0.72rem; font-weight: 700;
+                padding: 2px 8px;
+                border-radius: 6px;
+                font-size: 0.72rem;
+                font-weight: 700;
             `;
             contenedor.appendChild(span);
         });

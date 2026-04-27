@@ -71,6 +71,14 @@
                           font-size: 0.8rem; box-sizing: border-box;">
         </div>
         <div style="position: relative;">
+            <i class="bi bi-tag" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+            <input type="number" id="filtro-pulsera" placeholder="Pulsera..."
+                   style="width: 110px; padding: 0.45rem 0.75rem 0.45rem 2rem;
+                          border: 1px solid var(--border); border-radius: 8px;
+                          background: var(--bg-page); color: var(--text-primary);
+                          font-size: 0.8rem;">
+        </div>
+        <div style="position: relative;">
             <i class="bi bi-mortarboard" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
             <input type="text" id="filtro-curso" placeholder="Curso..."
                    style="width: 110px; padding: 0.45rem 0.75rem 0.45rem 2rem;
@@ -87,7 +95,10 @@
         <!-- VISTA MÓVIL -->
         <div class="d-block d-md-none">
             {% for r in repartos %}
-            <div class="fila-alumno" data-nombre="{{ r.nombre }} {{ r.apellido }}" data-curso="{{ r.curso }}"
+            <div class="fila-alumno"
+                 data-nombre="{{ r.nombre }} {{ r.apellido }}"
+                 data-curso="{{ r.curso }}"
+                 data-pulseras="{{ r.pulseras | join(',') }}"
                  style="padding: 1rem; border-bottom: 1px solid var(--border); width: 100%; box-sizing: border-box;">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; overflow: hidden;">
                     <div style="
@@ -149,7 +160,10 @@
                     </thead>
                     <tbody>
                         {% for r in repartos %}
-                        <tr class="fila-alumno" data-nombre="{{ r.nombre }} {{ r.apellido }}" data-curso="{{ r.curso }}">
+                        <tr class="fila-alumno"
+                            data-nombre="{{ r.nombre }} {{ r.apellido }}"
+                            data-curso="{{ r.curso }}"
+                            data-pulseras="{{ r.pulseras | join(',') }}">
                             <td>
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <div style="
@@ -274,19 +288,29 @@
 <script>
     const filtroNombre = document.getElementById('filtro-nombre');
     const filtroCurso = document.getElementById('filtro-curso');
+    const filtroPulsera = document.getElementById('filtro-pulsera');
+
+    function normalizar(str) {
+        return str.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
 
     function filtrar() {
-        const nombre = (filtroNombre?.value || '').toLowerCase().trim();
-        const curso = (filtroCurso?.value || '').toLowerCase().trim();
+        const nombre = normalizar(filtroNombre?.value || '');
+        const curso = normalizar((filtroCurso?.value || '').replace(/\s+/g, ' '));
+        const pulsera = (filtroPulsera?.value || '').trim();
         const filas = document.querySelectorAll('.fila-alumno');
         let visibles = 0;
 
         filas.forEach(fila => {
-            const fn = fila.dataset.nombre.toLowerCase();
-            const fc = fila.dataset.curso.toLowerCase();
+            const fn = normalizar(fila.dataset.nombre);
+            const fc = normalizar(fila.dataset.curso).replace(/\s+/g, ' ');
+            const fp = fila.dataset.pulseras || '';
+
             const matchNombre = !nombre || fn.includes(nombre);
             const matchCurso = !curso || fc.includes(curso);
-            const mostrar = matchNombre && matchCurso;
+            const matchPulsera = !pulsera || fp.split(',').includes(pulsera);
+            const mostrar = matchNombre && matchCurso && matchPulsera;
+
             fila.style.display = mostrar ? '' : 'none';
             if (mostrar) visibles++;
         });
@@ -297,6 +321,7 @@
 
     filtroNombre?.addEventListener('input', filtrar);
     filtroCurso?.addEventListener('input', filtrar);
+    filtroPulsera?.addEventListener('input', filtrar);
 
     function abrirModal(alumnoId, nombre, curso, pulseras) {
         document.getElementById('modal-alumno-nombre').textContent = nombre;

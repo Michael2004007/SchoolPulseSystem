@@ -296,14 +296,14 @@
 
     function filtrar() {
         const nombre = normalizar(filtroNombre?.value || '');
-        const curso = normalizer((filtroCurso?.value || '').replace(/\s+/g, ''));
+        const curso = normalizar((filtroCurso?.value || '').replace(/\s+/g, ' '));
         const pulsera = (filtroPulsera?.value || '').trim();
         const filas = document.querySelectorAll('.fila-alumno');
         let visibles = 0;
 
         filas.forEach(fila => {
             const fn = normalizar(fila.dataset.nombre);
-            cconst fc = normalizer(fila.dataset.curso).replace(/\s+/g, '');
+            const fc = normalizer(fila.dataset.curso).replace(/\s+/g, ' ');
             const fp = fila.dataset.pulseras || '';
 
             const matchNombre = !nombre || fn.includes(nombre);
